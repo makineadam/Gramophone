@@ -18,7 +18,7 @@ class CardPost extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 460,
+      height: 250,
       margin: const EdgeInsets.only(bottom: 24),
       child: Stack(
         children: [
@@ -47,30 +47,15 @@ class CardPost extends StatelessWidget {
             right: 20,
             child: Column(
               children: [
+                const SizedBox(
+                  height: 20,
+                ),
                 ..._itemStatus(
-                    "assets/images/ic_heart.png", post.like, context),
+                    "assets/images/like_button.png", post.like, context),
                 const SizedBox(height: 10),
                 ..._itemStatus(
-                    "assets/images/ic_message.png", post.comment, context),
-                const SizedBox(height: 10),
-                ..._itemStatus(
-                    "assets/images/ic_bookmark.png", "Save", context),
-                const SizedBox(height: 10),
-                ..._itemStatus(
-                    "assets/images/ic_send.png", post.share, context),
+                    "assets/images/ic_message.png", post.comment, context)
               ],
-            ),
-          ),
-          Positioned(
-            width: 5,
-            height: 30,
-            right: 72,
-            top: 200,
-            child: Container(
-              decoration: BoxDecoration(
-                color: AppColors.whiteColor,
-                borderRadius: BorderRadius.circular(50),
-              ),
             ),
           ),
           _buildItemPublisher(context),
@@ -116,7 +101,7 @@ class CardPost extends StatelessWidget {
 
   Container _buildItemPublisher(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(left: 18, right: 40, bottom: 24),
+      padding: const EdgeInsets.only(left: 18, right: 40, bottom: 60),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,7 +133,7 @@ class CardPost extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            post.caption,
+            "Look at how I sing!",
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: AppTheme.whiteTextStyle.copyWith(
@@ -160,7 +145,7 @@ class CardPost extends StatelessWidget {
           Text(
             post.hashtags.join(" "),
             style: AppTheme.whiteTextStyle.copyWith(
-              color: AppColors.greenColor,
+              color: AppColors.whiteColor,
               fontSize: 12,
               fontWeight: AppTheme.medium,
             ),

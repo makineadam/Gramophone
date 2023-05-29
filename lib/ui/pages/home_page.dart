@@ -90,7 +90,7 @@ class HomePage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       margin: const EdgeInsets.only(right: 24, left: 24, bottom: 16),
       decoration: BoxDecoration(
-        color: AppColors.whiteColor,
+        color: AppColors.greyColor,
         borderRadius: BorderRadius.circular(30),
       ),
       child: Row(
