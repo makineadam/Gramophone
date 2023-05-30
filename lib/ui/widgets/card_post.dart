@@ -59,6 +59,15 @@ class CardPost extends StatelessWidget {
             ),
           ),
           _buildItemPublisher(context),
+          Row(
+            children: [
+              SizedBox(width: 30),
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Image.asset("assets/images/sound_wave.png", width: 300, height: 75),
+              ),
+            ],
+          )
         ],
       ),
     );
@@ -88,6 +97,12 @@ class CardPost extends StatelessWidget {
   Container _buildImageCover() {
     return Container(
       decoration: BoxDecoration(
+        color: Colors.brown,
+        borderRadius: BorderRadius.circular(30),
+    )
+    );
+      /*Container(
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
         image: DecorationImage(
           fit: BoxFit.cover,
@@ -96,7 +111,7 @@ class CardPost extends StatelessWidget {
           ),
         ),
       ),
-    );
+    ); */
   }
 
   Container _buildItemPublisher(BuildContext context) {

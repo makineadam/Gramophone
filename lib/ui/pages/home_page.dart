@@ -90,7 +90,7 @@ class HomePage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       margin: const EdgeInsets.only(right: 24, left: 24, bottom: 16),
       decoration: BoxDecoration(
-        color: AppColors.greyColor,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(30),
       ),
       child: Row(
@@ -130,7 +130,7 @@ class HomePage extends StatelessWidget {
             icon,
             width: 24,
             height: 24,
-            color: selected ? AppColors.purpleColor : AppColors.blackColor,
+            color: selected ? Colors.brown : AppColors.blackColor,
           ),
           const SizedBox(height: 4),
           Text(
@@ -138,7 +138,7 @@ class HomePage extends StatelessWidget {
             style: AppTheme.blackTextStyle.copyWith(
               fontWeight: AppTheme.bold,
               fontSize: 12,
-              color: selected ? AppColors.purpleColor : AppColors.blackColor,
+              color: selected ? Colors.brown : AppColors.blackColor,
             ),
           ),
         ],
@@ -174,15 +174,16 @@ class HomePage extends StatelessWidget {
                 ),
               ],
             ),
-            child: Image.asset(
+            child:
+            const Icon(Icons.circle,color: Colors.brown, size: 40)
+            /* Image.asset(
               'assets/images/ic_logo.png',
               width: 40,
               height: 40,
-            ),
+            ), */
           ),
           const SizedBox(width: 12),
-          Image.asset("assets/images/ic_notification.png",
-              width: 24, height: 24),
+          Image.asset("assets/images/ic_notification.png",width: 24, height: 24),
           const SizedBox(width: 12),
           Image.asset("assets/images/ic_search.png", width: 24, height: 24),
           const Spacer(),
@@ -225,10 +226,10 @@ class HomePage extends StatelessWidget {
                       .copyWith(fontWeight: AppTheme.bold, fontSize: 12),
                 ),
                 const SizedBox(width: 2),
-                Image.asset(
+                /* Image.asset(
                   "assets/images/ic_checklist.png",
                   width: 16,
-                ),
+                ), */
                 const SizedBox(width: 4),
               ],
             ),
