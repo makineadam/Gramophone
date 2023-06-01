@@ -61,10 +61,16 @@ class CardPost extends StatelessWidget {
           _buildItemPublisher(context),
           Row(
             children: [
-              SizedBox(width: 30),
               Align(
                 alignment: Alignment.bottomLeft,
-                child: Image.asset("assets/images/sound_wave.png", width: 300, height: 75),
+                child: Row(
+                  children: [
+                    const SizedBox(width: 15),
+                    const Icon(Icons.play_circle_fill, color: Colors.black45, size: 50),
+                    const SizedBox(width: 2),
+                    Image.asset("assets/images/sound_wave.png", width: 300),
+                  ],
+                ),
               ),
             ],
           )
@@ -116,7 +122,7 @@ class CardPost extends StatelessWidget {
 
   Container _buildItemPublisher(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(left: 18, right: 40, bottom: 60),
+      padding: const EdgeInsets.only(left: 18, right: 40, bottom: 110),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
