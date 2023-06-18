@@ -17,7 +17,7 @@ class _WaveformScreenState extends State<WaveformScreen> {
   PlayerController controller = PlayerController();
   List<double> waveformData = [];
   PlayerState playerState = PlayerState.stopped;
-  final assetPath = 'assets/sounds/yanliz.mp3';
+  final assetPath = 'assets/sounds/enver.mp3';
 
   @override
   void initState() {
