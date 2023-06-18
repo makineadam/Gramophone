@@ -1,5 +1,5 @@
 import 'dart:ui';
-
+import 'waveform.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media_app/app/configs/colors.dart';
 import 'package:social_media_app/app/configs/theme.dart';
@@ -66,9 +66,10 @@ class CardPost extends StatelessWidget {
                 child: Row(
                   children: [
                     const SizedBox(width: 15),
-                    const Icon(Icons.play_circle_fill, color: Colors.black45, size: 50),
+                    const Icon(Icons.play_circle_fill,
+                        color: Colors.black45, size: 50),
                     const SizedBox(width: 2),
-                    Image.asset("assets/images/sound_wave.png", width: 300),
+                    WaveformScreen() //Image.asset("assets/images/sound_wave.png", width: 300),
                   ],
                 ),
               ),
@@ -102,12 +103,11 @@ class CardPost extends StatelessWidget {
 
   Container _buildImageCover() {
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.brown,
-        borderRadius: BorderRadius.circular(30),
-    )
-    );
-      /*Container(
+        decoration: BoxDecoration(
+      color: Colors.brown,
+      borderRadius: BorderRadius.circular(30),
+    ));
+    /*Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
         image: DecorationImage(
