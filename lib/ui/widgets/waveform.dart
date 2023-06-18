@@ -15,7 +15,7 @@ class _WaveformScreenState extends State<WaveformScreen> {
   PlayerController controller = PlayerController();
   List<double> waveformData = [];
   PlayerState playerState = PlayerState.stopped;
-  final assetPath = 'sounds/yanliz.mp3';
+  final assetPath = 'assets/sounds/sarki1.mp3';
 
   @override
   void initState() {
@@ -31,7 +31,7 @@ class _WaveformScreenState extends State<WaveformScreen> {
   Future<void> extractWaveformData() async {
     final bytes = await rootBundle.load(assetPath);
     final tempDir = await getTemporaryDirectory();
-    final tempPath = '${tempDir.path}/yanliz.mp3';
+    final tempPath = '${tempDir.path}/sarki1.mp3';
     final tempFile = await writeToFile(bytes, tempPath);
 
     await controller.preparePlayer(
