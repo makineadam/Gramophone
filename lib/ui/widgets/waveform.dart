@@ -6,6 +6,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:io';
 
+import 'package:social_media_app/app/configs/colors.dart';
+
 class WaveformScreen extends StatefulWidget {
   @override
   _WaveformScreenState createState() => _WaveformScreenState();
@@ -15,7 +17,7 @@ class _WaveformScreenState extends State<WaveformScreen> {
   PlayerController controller = PlayerController();
   List<double> waveformData = [];
   PlayerState playerState = PlayerState.stopped;
-  final assetPath = 'assets/sounds/sarki1.mp3';
+  final assetPath = 'assets/sounds/yanliz.mp3';
 
   @override
   void initState() {
@@ -70,19 +72,15 @@ class _WaveformScreenState extends State<WaveformScreen> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        AudioFileWaveforms(
-          size: Size(200, 100.0),
-          playerController: controller,
-          enableSeekGesture: true,
-          waveformType: WaveformType.long,
-          waveformData: waveformData,
-          playerWaveStyle: const PlayerWaveStyle(
-            fixedWaveColor: Colors.white54,
-            liveWaveColor: Colors.blueAccent,
-            spacing: 6,
-          ),
-        ),
         ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            fixedSize: const Size(20, 60),
+            foregroundColor: Colors.white,
+            backgroundColor: Color.fromARGB(255, 188, 96, 228),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(50)),
+            ),
+          ),
           onPressed: () async {
             if (playerState == PlayerState.playing) {
               await controller.pausePlayer();
@@ -90,7 +88,22 @@ class _WaveformScreenState extends State<WaveformScreen> {
               await controller.startPlayer(finishMode: FinishMode.stop);
             }
           },
-          child: Text(playerState == PlayerState.playing ? 'Pause' : 'Play'),
+          child: Icon(
+            playerState == PlayerState.playing ? Icons.pause : Icons.play_arrow,
+            size: 30,
+          ),
+        ),
+        AudioFileWaveforms(
+          size: const Size(200.0, 100.0),
+          playerController: controller,
+          enableSeekGesture: true,
+          waveformType: WaveformType.fitWidth,
+          waveformData: waveformData,
+          playerWaveStyle: const PlayerWaveStyle(
+            fixedWaveColor: Colors.white54,
+            liveWaveColor: Colors.white,
+            spacing: 6,
+          ),
         ),
       ],
     );

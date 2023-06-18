@@ -67,7 +67,7 @@ class HomePage extends StatelessWidget {
                 child: Container(
                   height: 110,
                   width: 40,
-                  color: AppColors.blackColor,
+                  color: AppColors.primaryColor2, //New Post
                   child: const Icon(
                     Icons.add,
                     size: 24,
@@ -130,7 +130,7 @@ class HomePage extends StatelessWidget {
             icon,
             width: 24,
             height: 24,
-            color: selected ? Colors.brown : AppColors.blackColor,
+            color: selected ? AppColors.primaryColor2 : AppColors.blackColor,
           ),
           const SizedBox(height: 4),
           Text(
@@ -138,7 +138,7 @@ class HomePage extends StatelessWidget {
             style: AppTheme.blackTextStyle.copyWith(
               fontWeight: AppTheme.bold,
               fontSize: 12,
-              color: selected ? Colors.brown : AppColors.blackColor,
+              color: selected ? AppColors.primaryColor2 : AppColors.blackColor,
             ),
           ),
         ],
@@ -163,27 +163,28 @@ class HomePage extends StatelessWidget {
         children: [
           const SizedBox(width: 8),
           Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.blackColor.withOpacity(0.2),
-                  blurRadius: 35,
-                  offset: const Offset(0, 10),
-                ),
-              ],
-            ),
-            child:
-            const Icon(Icons.circle,color: Colors.brown, size: 40)
-            /* Image.asset(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.blackColor.withOpacity(0.2),
+                    blurRadius: 35,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
+              ),
+              child: const Icon(Icons.circle,
+                  color: AppColors.primaryColor2, size: 40)
+              /* Image.asset(
               'assets/images/ic_logo.png',
               width: 40,
               height: 40,
             ), */
-          ),
+              ),
           const SizedBox(width: 12),
-          Image.asset("assets/images/ic_notification.png",width: 24, height: 24),
+          Image.asset("assets/images/ic_notification.png",
+              width: 24, height: 24),
           const SizedBox(width: 12),
           Image.asset("assets/images/ic_search.png", width: 24, height: 24),
           const Spacer(),

@@ -64,13 +64,7 @@ class CardPost extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomLeft,
                 child: Row(
-                  children: [
-                    const SizedBox(width: 15),
-                    const Icon(Icons.play_circle_fill,
-                        color: Colors.black45, size: 50),
-                    const SizedBox(width: 2),
-                    WaveformScreen() //Image.asset("assets/images/sound_wave.png", width: 300),
-                  ],
+                  children: [const SizedBox(width: 15), WaveformScreen()],
                 ),
               ),
             ],
@@ -104,7 +98,7 @@ class CardPost extends StatelessWidget {
   Container _buildImageCover() {
     return Container(
         decoration: BoxDecoration(
-      color: Colors.brown,
+      color: AppColors.primaryColor2,
       borderRadius: BorderRadius.circular(30),
     ));
     /*Container(
