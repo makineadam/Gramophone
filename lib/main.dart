@@ -3,6 +3,7 @@ import 'package:social_media_app/app/configs/theme.dart';
 import 'package:social_media_app/app/resources/constant/named_routes.dart';
 import 'package:social_media_app/ui/pages/home_page.dart';
 import 'package:social_media_app/ui/pages/profile_page.dart';
+import 'package:social_media_app/ui/pages/record_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,6 +26,8 @@ class MyApp extends StatelessWidget {
             return MaterialPageRoute(
               builder: (context) => const ProfilePage(),
             );
+          case NamedRoutes.recordScreen:
+            return MaterialPageRoute(builder: (context) => const RecordPage());
           default:
             return MaterialPageRoute(builder: (context) => const HomePage());
         }

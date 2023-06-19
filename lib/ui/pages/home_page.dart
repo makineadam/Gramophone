@@ -7,6 +7,7 @@ import 'package:social_media_app/ui/bloc/post_cubit.dart';
 import 'package:social_media_app/ui/widgets/card_post.dart';
 import 'package:social_media_app/ui/widgets/clip_status_bar.dart';
 
+import '../../app/resources/constant/named_routes.dart';
 import '../widgets/custom_app_bar.dart';
 
 class HomePage extends StatelessWidget {
@@ -64,14 +65,18 @@ class HomePage extends StatelessWidget {
               angle: 11,
               child: ClipPath(
                 clipper: ClipStatusBar(),
-                child: Container(
-                  height: 110,
-                  width: 40,
-                  color: AppColors.primaryColor2, //New Post
-                  child: const Icon(
-                    Icons.add,
-                    size: 24,
-                    color: AppColors.whiteColor,
+                child: GestureDetector(
+                  onTap: () =>
+                      Navigator.of(context).pushNamed(NamedRoutes.recordScreen),
+                  child: Container(
+                    height: 110,
+                    width: 40,
+                    color: AppColors.primaryColor2, //New Post
+                    child: const Icon(
+                      Icons.add,
+                      size: 24,
+                      color: AppColors.whiteColor,
+                    ),
                   ),
                 ),
               ),

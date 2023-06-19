@@ -33,7 +33,7 @@ class _WaveformScreenState extends State<WaveformScreen> {
   Future<void> extractWaveformData() async {
     final bytes = await rootBundle.load(assetPath);
     final tempDir = await getTemporaryDirectory();
-    final tempPath = '${tempDir.path}/sarki1.mp3';
+    final tempPath = '${tempDir.path}/enver.mp3';
     final tempFile = await writeToFile(bytes, tempPath);
 
     await controller.preparePlayer(
@@ -76,7 +76,7 @@ class _WaveformScreenState extends State<WaveformScreen> {
           style: ElevatedButton.styleFrom(
             fixedSize: const Size(20, 60),
             foregroundColor: Colors.white,
-            backgroundColor: Color.fromARGB(255, 188, 96, 228),
+            backgroundColor: const Color.fromARGB(255, 188, 96, 228),
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(50)),
             ),
