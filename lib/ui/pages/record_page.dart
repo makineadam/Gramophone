@@ -1,11 +1,10 @@
 import 'dart:io';
 
 import 'package:audio_waveforms/audio_waveforms.dart';
-import 'package:social_media_app/ui/widgets/chat_bubble.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:social_media_app/ui/widgets/waveform.dart';
+import 'package:social_media_app/app/configs/colors.dart';
 
 class RecordPage extends StatefulWidget {
   const RecordPage({Key? key}) : super(key: key);
@@ -65,24 +64,7 @@ class _HomeState extends State<RecordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF252331),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF252331),
-        elevation: 1,
-        centerTitle: true,
-        shadowColor: Colors.grey,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/images/logo.png',
-              scale: 1.5,
-            ),
-            const SizedBox(width: 10),
-            const Text('Simform'),
-          ],
-        ),
-      ),
+      backgroundColor: AppColors.whiteColor,
       body: isLoading
           ? const Center(
               child: CircularProgressIndicator(),
@@ -91,30 +73,15 @@ class _HomeState extends State<RecordPage> {
               child: Column(
                 children: [
                   const SizedBox(height: 20),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: 4,
-                      itemBuilder: (_, index) {
-                        return WaveBubble(
-                          index: index + 1,
-                          isSender: index.isOdd,
-                          width: MediaQuery.of(context).size.width / 2,
-                          appDirectory: appDirectory,
-                        );
-                      },
-                    ),
-                  ),
                   if (isRecordingCompleted)
-                    WaveBubble(
-                      path: path,
-                      isSender: true,
-                      appDirectory: appDirectory,
+                    Text(
+                      'Recorded File Path: $path',
+                      style: TextStyle(color: Colors.white),
                     ),
                   if (musicFile != null)
-                    WaveBubble(
-                      path: musicFile,
-                      isSender: true,
-                      appDirectory: appDirectory,
+                    Text(
+                      'Music File Path: $musicFile',
+                      style: TextStyle(color: Colors.white),
                     ),
                   SafeArea(
                     child: Row(
@@ -135,7 +102,7 @@ class _HomeState extends State<RecordPage> {
                                   ),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12.0),
-                                    color: const Color(0xFF1E1B26),
+                                    color: AppColors.primaryColor2,
                                   ),
                                   padding: const EdgeInsets.only(left: 18),
                                   margin: const EdgeInsets.symmetric(
@@ -146,7 +113,7 @@ class _HomeState extends State<RecordPage> {
                                       MediaQuery.of(context).size.width / 1.7,
                                   height: 50,
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF1E1B26),
+                                    color: AppColors.primaryColor2,
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
                                   padding: const EdgeInsets.only(left: 18),
@@ -155,7 +122,7 @@ class _HomeState extends State<RecordPage> {
                                   child: TextField(
                                     readOnly: true,
                                     decoration: InputDecoration(
-                                      hintText: "Type Something...",
+                                      hintText: "Record Something...",
                                       hintStyle: const TextStyle(
                                           color: Colors.white54),
                                       contentPadding:
@@ -174,14 +141,14 @@ class _HomeState extends State<RecordPage> {
                           onPressed: _refreshWave,
                           icon: Icon(
                             isRecording ? Icons.refresh : Icons.send,
-                            color: Colors.white,
+                            color: AppColors.primaryColor2,
                           ),
                         ),
                         const SizedBox(width: 16),
                         IconButton(
                           onPressed: _startOrStopRecording,
                           icon: Icon(isRecording ? Icons.stop : Icons.mic),
-                          color: Colors.white,
+                          color: AppColors.primaryColor2,
                           iconSize: 28,
                         ),
                       ],
@@ -198,12 +165,13 @@ class _HomeState extends State<RecordPage> {
       if (isRecording) {
         recorderController.reset();
 
-        final path = await recorderController.stop(false);
+        final recordedPath = await recorderController.stop();
 
-        if (path != null) {
+        if (recordedPath != null) {
           isRecordingCompleted = true;
-          debugPrint(path);
-          debugPrint("Recorded file size: ${File(path).lengthSync()}");
+          path = recordedPath;
+          debugPrint("Recorded file path: $path");
+          debugPrint("Recorded file size: ${File(path!).lengthSync()}");
         }
       } else {
         await recorderController.record(path: path!);
