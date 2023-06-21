@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "414109046017",
+    "project_id": "gramophone-5d745",
+    "storage_bucket": "gramophone-5d745.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:414109046017:android:2c4465b1eecea557e8b700",
+        "android_client_info": {
+          "package_name": "com.rrdhoi.social_media_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "414109046017-4233mmgn2t7kv69fll7abapn4ssd7uce.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYnXwcafzUVTjE71NRT3CueI94zzJvJ38"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "414109046017-4233mmgn2t7kv69fll7abapn4ssd7uce.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

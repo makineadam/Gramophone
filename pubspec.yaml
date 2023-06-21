@@ -37,6 +37,7 @@ dependencies:
   wave: ^0.2.2
   path_provider: ^2.0.15
   file_picker: ^5.2.10
+  firebase_core: ^2.14.0
 
 
   # The following adds the Cupertino Icons font to your application.
