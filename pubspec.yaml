@@ -38,6 +38,7 @@ dependencies:
   path_provider: ^2.0.15
   file_picker: ^5.2.10
   firebase_core: ^2.14.0
+  flutter_login: ^4.1.1
 
 
   # The following adds the Cupertino Icons font to your application.
