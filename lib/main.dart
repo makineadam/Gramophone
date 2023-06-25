@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media_app/app/configs/theme.dart';
 import 'package:social_media_app/app/resources/constant/named_routes.dart';
@@ -6,7 +7,10 @@ import 'package:social_media_app/ui/pages/login_page.dart';
 import 'package:social_media_app/ui/pages/profile_page.dart';
 import 'package:social_media_app/ui/pages/record_page.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   runApp(const MyApp());
 }
 

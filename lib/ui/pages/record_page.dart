@@ -1,11 +1,10 @@
 import 'dart:io';
-
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:social_media_app/app/configs/colors.dart';
-
+import 'package:stop_watch_timer/stop_watch_timer.dart';
 import '../../app/configs/theme.dart';
 
 class RecordPage extends StatefulWidget {
