@@ -10,12 +10,10 @@ const users = const {
 };
 
 class LoginScreen extends StatelessWidget {
-
   Duration get loginTime => Duration(milliseconds: 2250);
 
   Future<String?> _authUser(LoginData data) async {
     debugPrint('Name: ${data.name}, Password: ${data.password}');
-    FirebaseAuth.instance.signInWithEmailAndPassword(email: data.name, password: data.password);
 
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -38,9 +36,10 @@ class LoginScreen extends StatelessWidget {
     return null;
   }
 
-  Future<String?>? _signupUser(SignupData data) {
+  Future<String?>? _signupUser(SignupData data) async {
     debugPrint('Signup Name: ${data.name}, Password: ${data.password}');
-    FirebaseAuth.instance.createUserWithEmailAndPassword(email: data.name!, password: data.password!);
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: data.name!, password: data.password!);
     return null;
   }
 

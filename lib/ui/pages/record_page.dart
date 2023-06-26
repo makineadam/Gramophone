@@ -17,7 +17,7 @@ class RecordPage extends StatefulWidget {
 class _HomeState extends State<RecordPage> {
   late final RecorderController recorderController;
 
-  String? path;
+  late String? path;
   String? musicFile;
   bool isRecording = false;
   bool isRecordingCompleted = false;
