@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:social_media_app/app/configs/colors.dart';
@@ -17,7 +19,10 @@ class RecordPage extends StatefulWidget {
 class _HomeState extends State<RecordPage> {
   late final RecorderController recorderController;
 
+  late DatabaseReference dbRef;
+
   late String? path;
+  late String? path2;
   String? musicFile;
   bool isRecording = false;
   bool isRecordingCompleted = false;
@@ -29,11 +34,14 @@ class _HomeState extends State<RecordPage> {
     super.initState();
     _getDir();
     _initialiseControllers();
+    dbRef = FirebaseDatabase.instance.ref().child('Recordings');
   }
 
   void _getDir() async {
     appDirectory = await getApplicationDocumentsDirectory();
     path = "${appDirectory.path}/recording.m4a";
+    path2 = "${appDirectory.path}/recording2.m4a";
+    isLoading = false;
     isLoading = false;
     setState(() {});
   }
@@ -245,8 +253,30 @@ class _HomeState extends State<RecordPage> {
         if (recordedPath != null) {
           isRecordingCompleted = true;
           path = recordedPath;
-          debugPrint("Recorded file path: $path");
-          debugPrint("Recorded file size: ${File(path!).lengthSync()}");
+          File file = File(path!);
+
+          dbRef.child('audio').push().set({
+            'audio': base64Encode(file.readAsBytesSync()),
+          });
+
+          DatabaseEvent event = await dbRef.once();
+          DataSnapshot dataSnapshot = event.snapshot;
+
+          Map<dynamic, dynamic>? audioData =
+              dataSnapshot.value as Map<dynamic, dynamic>?;
+
+          if (audioData != null) {
+            String audioBase64 = audioData['audio'];
+            List<int> audioBytes = base64Decode(audioBase64);
+            File file = File(path2!); // Provide the desired file path
+            await file.writeAsBytes(audioBytes);
+          }
+
+          //Object? audioData = dataSnapshot.value;
+
+          //List<int> audioBytes = base64Decode(audioData.toString());
+
+          //File file2 = File(path2!);
         }
       } else {
         await recorderController.record(path: path!);
