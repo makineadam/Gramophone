@@ -29,8 +29,9 @@ class _HomeState extends State<RecordPage> {
   bool isRecordingCompleted = false;
   bool isLoading = true;
   late Directory appDirectory;
-
   final FirebaseAuth auth = FirebaseAuth.instance;
+  final StopWatchTimer _stopWatchTimer = StopWatchTimer();
+  final _isHours = true;
 
   @override
   void initState() {
@@ -71,6 +72,7 @@ class _HomeState extends State<RecordPage> {
   void dispose() {
     recorderController.dispose();
     super.dispose();
+    _stopWatchTimer.dispose();
   }
 
   @override
@@ -106,16 +108,6 @@ class _HomeState extends State<RecordPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   const SizedBox(height: 100),
-                  if (isRecordingCompleted)
-                    Text(
-                      'Recorded File Path: $path',
-                      style: TextStyle(color: AppColors.blackColor),
-                    ),
-                  if (musicFile != null)
-                    Text(
-                      'Music File Path: $musicFile',
-                      style: TextStyle(color: AppColors.blackColor),
-                    ),
                   SafeArea(
                     child: Column(
                       children: [
@@ -126,7 +118,6 @@ class _HomeState extends State<RecordPage> {
                                   enableGesture: true,
                                   size: Size(
                                       MediaQuery.of(context).size.width,
-
                                       /// 2,
                                       70),
                                   recorderController: recorderController,
@@ -230,12 +221,22 @@ class _HomeState extends State<RecordPage> {
                           ),
                         ),
                         const SizedBox(height: 45),
-                        Text(
-                          '00.02.36',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 34,
-                              color: AppColors.primaryColor2.withOpacity(0.5)),
+                        StreamBuilder<int>(
+                          stream: _stopWatchTimer.rawTime,
+                          initialData: _stopWatchTimer.rawTime.value,
+                          builder: (context, snapshot) {
+                            final value = snapshot.data;
+                            final displayTime =
+                            StopWatchTimer.getDisplayTime(value!, hours: _isHours);
+
+                            return Text(
+                              displayTime,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 34,
+                                color: AppColors.primaryColor2.withOpacity(0.5))
+                            );
+                          },
                         ),
                       ],
                     ),
@@ -249,8 +250,10 @@ class _HomeState extends State<RecordPage> {
   void _startOrStopRecording() async {
     try {
       if (isRecording) {
+
         recorderController.reset();
 
+        _stopWatchTimer.onExecute.add(StopWatchExecute.stop); //stop
         final recordedPath = await recorderController.stop();
 
         if (recordedPath != null) {
@@ -268,30 +271,10 @@ class _HomeState extends State<RecordPage> {
           } else {
             print('No data available.');
           }
-
-          //DatabaseEvent event = await dbRef.child('audio').once();
-
-          //DataSnapshot dataSnapshot = event.snapshot;
-
-          //Map<dynamic, dynamic>? audioData = dataSnapshot.value as Map<dynamic, dynamic>?;
-
-          /*if (audioData != null) {
-            String audioBase64 = audioData['audio'];
-            List<int> audioBytes = base64Decode(audioBase64);
-            File file2 = File(path2!); // Provide the desired file path
-            await file2.writeAsBytes(audioBytes);
-            dbRef.child('audio').push().set({
-              'audio': base64Encode(file2.readAsBytesSync()),
-            });
-          }*/
-
-          //Object? audioData = dataSnapshot.value;
-
-          //List<int> audioBytes = base64Decode(audioData.toString());
-
-          //File file2 = File(path2!);
         }
+
       } else {
+        _stopWatchTimer.onExecute.add(StopWatchExecute.start); //start timer
         await recorderController.record(path: path!);
       }
     } catch (e) {
@@ -305,5 +288,6 @@ class _HomeState extends State<RecordPage> {
 
   void _refreshWave() {
     if (isRecording) recorderController.refresh();
+    _stopWatchTimer.onExecute.add(StopWatchExecute.reset);
   }
 }

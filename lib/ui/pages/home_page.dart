@@ -103,7 +103,7 @@ class HomePage extends StatelessWidget {
         children: [
           _buildItemBottomNavBar("assets/images/ic_home.png", "Home", true),
           _buildItemBottomNavBar(
-              "assets/images/ic_discorvery.png", "Discover", false),
+              "assets/images/ic_search.png", "Search", false),
           _buildItemBottomNavBar("assets/images/ic_inbox.png", "Inbox", false),
           _buildItemBottomNavBar(
               "assets/images/ic_profile.png", "Profile", false),
@@ -166,10 +166,10 @@ class HomePage extends StatelessWidget {
     return CustomAppBar(
       child: Row(
         children: [
-          const SizedBox(width: 8),
+          const SizedBox(width: 10),
           Container(
-              width: 40,
-              height: 40,
+              width: 30,
+              height: 30,
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
@@ -179,19 +179,17 @@ class HomePage extends StatelessWidget {
                   ),
                 ],
               ),
-              child: const Icon(Icons.circle,
-                  color: AppColors.primaryColor2, size: 40)
-              /* Image.asset(
-              'assets/images/ic_logo.png',
-              width: 40,
-              height: 40,
-            ), */
+              child:
+              Image.asset(
+              'assets/images/gramophone.png',
+              width: 30,
+              height: 30,
+            ),
               ),
           const SizedBox(width: 12),
           Image.asset("assets/images/ic_notification.png",
               width: 24, height: 24),
           const SizedBox(width: 12),
-          Image.asset("assets/images/ic_search.png", width: 24, height: 24),
           const Spacer(),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
@@ -227,16 +225,11 @@ class HomePage extends StatelessWidget {
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  "Sajon.co",
+                  "Ali Safarli",
                   style: AppTheme.blackTextStyle
                       .copyWith(fontWeight: AppTheme.bold, fontSize: 12),
                 ),
-                const SizedBox(width: 2),
-                /* Image.asset(
-                  "assets/images/ic_checklist.png",
-                  width: 16,
-                ), */
-                const SizedBox(width: 4),
+                const SizedBox(width: 6),
               ],
             ),
           )

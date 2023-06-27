@@ -21,7 +21,7 @@ class PostCubit extends Cubit<PostState> {
           jsonResult.map((e) => PostModel.fromJson(e)).toList();
       emit(PostLoaded(posts: posts));
     } catch (e) {
-      emit(PostError(message: 'Terjadi kesalahan saat memuat data'));
+      emit(PostError(message: 'An error occurred while loading data'));
     }
   }
 }
