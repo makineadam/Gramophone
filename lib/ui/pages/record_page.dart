@@ -118,6 +118,7 @@ class _HomeState extends State<RecordPage> {
                                   enableGesture: true,
                                   size: Size(
                                       MediaQuery.of(context).size.width,
+
                                       /// 2,
                                       70),
                                   recorderController: recorderController,
@@ -226,16 +227,16 @@ class _HomeState extends State<RecordPage> {
                           initialData: _stopWatchTimer.rawTime.value,
                           builder: (context, snapshot) {
                             final value = snapshot.data;
-                            final displayTime =
-                            StopWatchTimer.getDisplayTime(value!, hours: _isHours);
+                            final displayTime = StopWatchTimer.getDisplayTime(
+                                value!,
+                                hours: _isHours);
 
-                            return Text(
-                              displayTime,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 34,
-                                color: AppColors.primaryColor2.withOpacity(0.5))
-                            );
+                            return Text(displayTime,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 34,
+                                    color: AppColors.primaryColor2
+                                        .withOpacity(0.5)));
                           },
                         ),
                       ],
@@ -250,10 +251,9 @@ class _HomeState extends State<RecordPage> {
   void _startOrStopRecording() async {
     try {
       if (isRecording) {
-
         recorderController.reset();
 
-        _stopWatchTimer.onExecute.add(StopWatchExecute.stop); //stop
+        _stopWatchTimer.onStopTimer(); //stop
         final recordedPath = await recorderController.stop();
 
         if (recordedPath != null) {
@@ -272,9 +272,8 @@ class _HomeState extends State<RecordPage> {
             print('No data available.');
           }
         }
-
       } else {
-        _stopWatchTimer.onExecute.add(StopWatchExecute.start); //start timer
+        _stopWatchTimer.onStartTimer(); //start timer
         await recorderController.record(path: path!);
       }
     } catch (e) {
@@ -288,6 +287,6 @@ class _HomeState extends State<RecordPage> {
 
   void _refreshWave() {
     if (isRecording) recorderController.refresh();
-    _stopWatchTimer.onExecute.add(StopWatchExecute.reset);
+    _stopWatchTimer.onResetTimer();
   }
 }
