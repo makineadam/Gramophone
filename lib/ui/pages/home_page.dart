@@ -4,14 +4,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_app/app/configs/colors.dart';
 import 'package:social_media_app/app/configs/theme.dart';
 import 'package:social_media_app/ui/bloc/post_cubit.dart';
+import 'package:social_media_app/ui/pages/inbox_page.dart';
 import 'package:social_media_app/ui/widgets/card_post.dart';
 import 'package:social_media_app/ui/widgets/clip_status_bar.dart';
 
 import '../../app/resources/constant/named_routes.dart';
 import '../widgets/custom_app_bar.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
+
+  final pages = [
+    HomePage(),
+    const InboxPage(),
+    const InboxPage(),
+    const InboxPage(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -82,71 +95,89 @@ class HomePage extends StatelessWidget {
               ),
             ),
           ),
-          _buildBottomNavBar(),
         ],
       ),
+      bottomNavigationBar: _buildBottomNavBar(),
+      extendBody: true,
     );
   }
 
   Container _buildBottomNavBar() {
     return Container(
       width: double.infinity,
-      height: 110,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      margin: const EdgeInsets.only(right: 24, left: 24, bottom: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _buildItemBottomNavBar("assets/images/ic_home.png", "Home", true),
-          _buildItemBottomNavBar(
-              "assets/images/ic_search.png", "Search", false),
-          _buildItemBottomNavBar("assets/images/ic_inbox.png", "Inbox", false),
-          _buildItemBottomNavBar(
-              "assets/images/ic_profile.png", "Profile", false),
-        ],
+      height: 130,
+      color: Colors.transparent,
+      child: Container(
+        width: double.infinity,
+        height: 110,
+        margin: const EdgeInsets.only(left: 24, right: 24, bottom: 24),
+        padding: const EdgeInsets.all(16),
+        //padding: const EdgeInsets.symmetric(horizontal: 16),
+        //margin: const EdgeInsets.only(right: 24, left: 24, bottom: 16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildItemBottomNavBar(
+                "assets/images/ic_home.png", "Home", true, 0),
+            _buildItemBottomNavBar(
+                "assets/images/ic_search.png", "Search", false, 1),
+            _buildItemBottomNavBar(
+                "assets/images/ic_inbox.png", "Inbox", false, 2),
+            _buildItemBottomNavBar(
+                "assets/images/ic_profile.png", "Profile", false, 3),
+          ],
+        ),
       ),
     );
   }
 
-  _buildItemBottomNavBar(String icon, String title, bool selected) {
-    return Container(
-      width: 70,
-      height: 70,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        color: selected ? AppColors.whiteColor : Colors.transparent,
-        boxShadow: [
-          if (selected)
-            BoxShadow(
-              color: AppColors.blackColor.withOpacity(0.1),
-              blurRadius: 35,
-              offset: const Offset(0, 10),
-            ),
-        ],
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(
-            icon,
-            width: 24,
-            height: 24,
-            color: selected ? AppColors.primaryColor2 : AppColors.blackColor,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            title,
-            style: AppTheme.blackTextStyle.copyWith(
-              fontWeight: AppTheme.bold,
-              fontSize: 12,
+  _buildItemBottomNavBar(String icon, String title, bool selected, int index) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedIndex = index;
+        });
+      },
+      child: Container(
+        width: 70,
+        height: 70,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+          color: selected ? AppColors.whiteColor : Colors.transparent,
+          boxShadow: [
+            if (selected)
+              BoxShadow(
+                color: AppColors.blackColor.withOpacity(0.1),
+                blurRadius: 35,
+                offset: const Offset(0, 10),
+              ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              icon,
+              width: 24,
+              height: 24,
               color: selected ? AppColors.primaryColor2 : AppColors.blackColor,
             ),
-          ),
-        ],
+            const SizedBox(height: 4),
+            Text(
+              title,
+              style: AppTheme.blackTextStyle.copyWith(
+                fontWeight: AppTheme.bold,
+                fontSize: 12,
+                color:
+                    selected ? AppColors.primaryColor2 : AppColors.blackColor,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -168,24 +199,23 @@ class HomePage extends StatelessWidget {
         children: [
           const SizedBox(width: 10),
           Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.blackColor.withOpacity(0.2),
-                    blurRadius: 35,
-                    offset: const Offset(0, 10),
-                  ),
-                ],
-              ),
-              child:
-              Image.asset(
+            width: 30,
+            height: 30,
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.blackColor.withOpacity(0.2),
+                  blurRadius: 35,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+            ),
+            child: Image.asset(
               'assets/images/gramophone.png',
               width: 30,
               height: 30,
             ),
-              ),
+          ),
           const SizedBox(width: 12),
           Image.asset("assets/images/ic_notification.png",
               width: 24, height: 24),
