@@ -6,6 +6,7 @@ import 'package:social_media_app/ui/pages/home_page.dart';
 import 'package:social_media_app/ui/pages/login_page.dart';
 import 'package:social_media_app/ui/pages/profile_page.dart';
 import 'package:social_media_app/ui/pages/record_page.dart';
+import 'package:social_media_app/ui/pages/navigation_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +34,9 @@ class MyApp extends StatelessWidget {
             );
           case NamedRoutes.recordScreen:
             return MaterialPageRoute(builder: (context) => const RecordPage());
+          case NamedRoutes.navigationScreen:
+            return MaterialPageRoute(
+                builder: (context) => const NavigationPage());
           default:
             return MaterialPageRoute(builder: (context) => LoginScreen());
         }
