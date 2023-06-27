@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -28,6 +29,8 @@ class _HomeState extends State<RecordPage> {
   bool isRecordingCompleted = false;
   bool isLoading = true;
   late Directory appDirectory;
+
+  final FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -255,11 +258,11 @@ class _HomeState extends State<RecordPage> {
           path = recordedPath;
           File file = File(path!);
 
-          dbRef.child('audio').push().set({
+          dbRef.child(auth.currentUser!.uid).push().set({
             'audio': base64Encode(file.readAsBytesSync()),
           });
 
-          final snapshot = await dbRef.child('audio').get();
+          final snapshot = await dbRef.child(auth.currentUser!.uid).get();
           if (snapshot.exists) {
             print(snapshot.value);
           } else {
