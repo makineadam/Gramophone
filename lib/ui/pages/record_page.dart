@@ -258,7 +258,7 @@ class _HomeState extends State<RecordPage> {
           path = recordedPath;
           File file = File(path!);
 
-          dbRef.child(auth.currentUser!.uid).push().set({
+          dbRef.child(auth.currentUser!.uid).set({
             'audio': base64Encode(file.readAsBytesSync()),
           });
 
