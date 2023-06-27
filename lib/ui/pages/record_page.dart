@@ -259,18 +259,28 @@ class _HomeState extends State<RecordPage> {
             'audio': base64Encode(file.readAsBytesSync()),
           });
 
-          DatabaseEvent event = await dbRef.once();
-          DataSnapshot dataSnapshot = event.snapshot;
+          final snapshot = await dbRef.child('audio').get();
+          if (snapshot.exists) {
+            print(snapshot.value);
+          } else {
+            print('No data available.');
+          }
 
-          Map<dynamic, dynamic>? audioData =
-              dataSnapshot.value as Map<dynamic, dynamic>?;
+          //DatabaseEvent event = await dbRef.child('audio').once();
 
-          if (audioData != null) {
+          //DataSnapshot dataSnapshot = event.snapshot;
+
+          //Map<dynamic, dynamic>? audioData = dataSnapshot.value as Map<dynamic, dynamic>?;
+
+          /*if (audioData != null) {
             String audioBase64 = audioData['audio'];
             List<int> audioBytes = base64Decode(audioBase64);
-            File file = File(path2!); // Provide the desired file path
-            await file.writeAsBytes(audioBytes);
-          }
+            File file2 = File(path2!); // Provide the desired file path
+            await file2.writeAsBytes(audioBytes);
+            dbRef.child('audio').push().set({
+              'audio': base64Encode(file2.readAsBytesSync()),
+            });
+          }*/
 
           //Object? audioData = dataSnapshot.value;
 
