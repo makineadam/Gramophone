@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: (RouteSettings settings) {
         switch (settings.name) {
           case NamedRoutes.homeScreen:
-            return MaterialPageRoute(builder: (context) => const HomePage());
+            return MaterialPageRoute(builder: (context) => HomePage());
           case NamedRoutes.profileScreen:
             return MaterialPageRoute(
               builder: (context) => const ProfilePage(),
