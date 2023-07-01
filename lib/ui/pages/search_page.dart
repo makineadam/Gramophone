@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -15,19 +16,27 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
 
-  late Map<String,dynamic> userMap;
+  Map<String,dynamic>? userMap;
   bool isLoading = false;
   final TextEditingController _search = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  String chatRoomId(String user1, String user2) {
+    if (user1[0].toLowerCase().codeUnits[0] > user2.toLowerCase().codeUnits[0]) {
+      return "$user1$user2";
+    } else{
+      return "$user2$user1";
+    }
+  }
 
   void onSearch() async{
 
-    FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
+    FirebaseFirestore fireStore = FirebaseFirestore.instance;
     setState(() {
       isLoading = true;
     });
 
-    await _firestore.collection('users').where("email", isEqualTo: _search.text).get().then((value) {
+    await fireStore.collection('users').where("email", isEqualTo: _search.text).get().then((value) {
       setState(() {
         userMap = value.docs[0].data();
         isLoading = false;
@@ -76,11 +85,16 @@ class _SearchPageState extends State<SearchPage> {
           ),
           userMap != null ? ListTile(
             onTap: (){
-              Navigator.of(context).push(MaterialPageRoute(builder: (_) => InboxPage()));
+
+              String roomId = chatRoomId(_auth.currentUser!.uid, userMap?['email']);
+
+              Navigator.of(context).push(MaterialPageRoute(builder: (_) => InboxPage(
+                chatRoomId: roomId,userMap: userMap,
+              )));
 
             },
             leading: const Icon(Icons.account_box, color: Colors.white,),
-            title: Text(userMap['email'],style: const TextStyle(
+            title: Text(userMap?['email'],style: const TextStyle(
               color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold,
             ),),
             trailing: const Icon(Icons.chat, color: Colors.white),

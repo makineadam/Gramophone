@@ -22,7 +22,7 @@ class _MyWidgetState extends State<NavigationPage> {
   final pages = [
     HomePage(),
     const SearchPage(),
-    const InboxPage(),
+    InboxPage(),
     const MyProfilePage(),
   ];
 
