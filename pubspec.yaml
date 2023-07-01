@@ -43,6 +43,7 @@ dependencies:
   stop_watch_timer: ^2.0.0
   firebase_storage: ^11.2.4 
   firebase_database: ^10.2.3
+  cloud_firestore: ^4.8.2
   
 
   # The following adds the Cupertino Icons font to your application.

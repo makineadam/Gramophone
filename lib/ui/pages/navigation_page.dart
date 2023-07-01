@@ -4,7 +4,6 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:social_media_app/app/configs/colors.dart';
 import 'package:social_media_app/app/configs/theme.dart';
 import 'package:social_media_app/ui/pages/myprofile_page.dart';
-import 'package:social_media_app/ui/pages/profile_page.dart';
 import 'package:social_media_app/ui/pages/search_page.dart';
 
 import 'home_page.dart';
