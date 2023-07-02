@@ -37,10 +37,7 @@ class MyApp extends StatelessWidget {
             return MaterialPageRoute(builder: (context) => const RecordPage());
           case NamedRoutes.navigationScreen:
             return MaterialPageRoute(
-                builder: (context) => const NavigationPage());
-          case NamedRoutes.navigationScreen2:
-            return MaterialPageRoute(
-                builder: (context) => const NavigationPage(index: 2));
+                builder: (context) => const NavigationPage(index: 0));
           case NamedRoutes.inboxPage:
             return MaterialPageRoute(builder: (context) => const InboxPage());
           default:

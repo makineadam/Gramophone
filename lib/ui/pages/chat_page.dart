@@ -8,6 +8,7 @@ import 'package:social_media_app/app/configs/colors.dart';
 import 'package:social_media_app/app/configs/theme.dart';
 import 'package:social_media_app/app/resources/constant/named_routes.dart';
 import 'package:social_media_app/ui/pages/navigation_page.dart';
+import 'package:chat_bubbles/chat_bubbles.dart';
 
 class ChatPage extends StatelessWidget {
   final Map<String, dynamic>? userMap;
@@ -48,8 +49,11 @@ class ChatPage extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          onPressed: () => MaterialPageRoute(
-              builder: (context) => const NavigationPage(index: 2)),
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const NavigationPage(index: 2)),
+          ),
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
             size: 24,
@@ -74,6 +78,7 @@ class ChatPage extends StatelessWidget {
       ),
       backgroundColor: AppColors.whiteColor,
       body: SingleChildScrollView(
+        reverse: true,
         child: Column(
           children: [
             Container(
@@ -90,6 +95,7 @@ class ChatPage extends StatelessWidget {
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.data != null) {
                     return ListView.builder(
+                        reverse: false,
                         itemCount: snapshot.data!.docs.length,
                         itemBuilder: (context, index) {
                           Map<String, dynamic> map = snapshot.data!.docs[index]
@@ -113,18 +119,26 @@ class ChatPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 219, 219, 219),
+                        border: Border.all(color: AppColors.whiteColor),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                       height: size.height / 17,
                       width: size.width / 1.3,
-                      child: TextField(
-                        controller: _message,
-                        decoration: InputDecoration(
-                            hintText: "Send Mesage",
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8))),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 12.0, bottom: 2),
+                        child: TextField(
+                          controller: _message,
+                          decoration: const InputDecoration(
+                            hintText: "Type a message...",
+                            border: InputBorder.none,
+                          ),
+                        ),
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.send),
+                      icon: const Icon(Icons.send),
                       onPressed: onSendMessage,
                     )
                   ],
@@ -138,16 +152,31 @@ class ChatPage extends StatelessWidget {
   }
 
   Widget messages(Size size, Map<String, dynamic> map) {
-    return Container(
-      width: size.width,
-      alignment: map['sendby'] == _auth.currentUser!.uid
-          ? Alignment.centerRight
-          : Alignment.centerLeft,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
-        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+    return Column(
+      children: [
+        /*DateChip(
+          date: DateTime(2021, 5, 7),
+          color: AppColors.primaryColor2.withOpacity(0.2),
+        ),*/
+        Container(
+          child: BubbleNormal(
+            color: AppColors.primaryColor2,
+            isSender: map['sendby'] == _auth.currentUser!.uid ? true : false,
+            text: map['message'],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+
+/* Container(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15), color: Colors.blue),
+            borderRadius: BorderRadius.circular(15),
+            color: AppColors.primaryColor2),
         child: Text(
           map['message'],
           style: const TextStyle(
@@ -156,7 +185,4 @@ class ChatPage extends StatelessWidget {
             color: Colors.black,
           ),
         ),
-      ),
-    );
-  }
-}
+      ), */

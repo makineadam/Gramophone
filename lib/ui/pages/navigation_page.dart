@@ -12,16 +12,16 @@ import 'home_page.dart';
 import 'chat_page.dart';
 
 class NavigationPage extends StatefulWidget {
-  final int? index;
+  final int index;
 
-  const NavigationPage({super.key, this.index});
+  const NavigationPage({Key? key, required this.index}) : super(key: key);
 
   @override
   State<NavigationPage> createState() => _MyWidgetState();
 }
 
 class _MyWidgetState extends State<NavigationPage> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
 
   final pages = [
     HomePage(),
@@ -31,9 +31,13 @@ class _MyWidgetState extends State<NavigationPage> {
   ];
 
   @override
-  Widget build(BuildContext context) {
-    if (widget.index != null) _selectedIndex = widget.index!;
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.index;
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: pages[_selectedIndex],
       bottomNavigationBar: _buildBottomNavBar(),
@@ -54,6 +58,13 @@ class _MyWidgetState extends State<NavigationPage> {
         //padding: const EdgeInsets.symmetric(horizontal: 16),
         //margin: const EdgeInsets.only(right: 24, left: 24, bottom: 16),
         decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.blackColor.withOpacity(0.3),
+              blurRadius: 35,
+              offset: const Offset(0, 10),
+            ),
+          ],
           color: Colors.white,
           borderRadius: BorderRadius.circular(30),
         ),
