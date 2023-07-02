@@ -18,7 +18,7 @@ class ChatPage extends StatelessWidget {
   void onSendMessage() async {
     if (_message.text.isNotEmpty) {
       Map<String, dynamic> messages = {
-        "sendby": _auth.currentUser?.displayName,
+        "sendby": _auth.currentUser?.uid,
         "message": _message.text,
         "time": FieldValue.serverTimestamp(),
       };
@@ -29,7 +29,7 @@ class ChatPage extends StatelessWidget {
           .collection('chatroom')
           .doc(chatRoomId)
           .collection('chats')
-          .add({});
+          .add(messages);
     } else {
       print("Enter Some Text");
     }
@@ -60,9 +60,9 @@ class ChatPage extends StatelessWidget {
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.data != null) {
                     return ListView.builder(
-                        itemCount: snapshot.data?.docs.length,
+                        itemCount: snapshot.data!.docs.length,
                         itemBuilder: (context, index) {
-                          Map<String, dynamic> map = snapshot.data?.docs[index]
+                          Map<String, dynamic> map = snapshot.data!.docs[index]
                               .data() as Map<String, dynamic>;
                           return messages(size, map);
                         });
@@ -110,7 +110,7 @@ class ChatPage extends StatelessWidget {
   Widget messages(Size size, Map<String, dynamic> map) {
     return Container(
       width: size.width,
-      alignment: map['sendby'] == _auth.currentUser!.displayName
+      alignment: map['sendby'] == _auth.currentUser!.uid
           ? Alignment.centerRight
           : Alignment.centerLeft,
       child: Container(
@@ -123,7 +123,7 @@ class ChatPage extends StatelessWidget {
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w500,
-            color: Colors.white,
+            color: Colors.black,
           ),
         ),
       ),
