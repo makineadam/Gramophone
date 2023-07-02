@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:social_media_app/app/configs/theme.dart';
 import 'package:social_media_app/app/resources/constant/named_routes.dart';
 import 'package:social_media_app/ui/pages/home_page.dart';
+import 'package:social_media_app/ui/pages/inbox_page.dart';
 import 'package:social_media_app/ui/pages/login_page.dart';
 import 'package:social_media_app/ui/pages/profile_page.dart';
 import 'package:social_media_app/ui/pages/record_page.dart';
@@ -37,6 +38,11 @@ class MyApp extends StatelessWidget {
           case NamedRoutes.navigationScreen:
             return MaterialPageRoute(
                 builder: (context) => const NavigationPage());
+          case NamedRoutes.navigationScreen2:
+            return MaterialPageRoute(
+                builder: (context) => const NavigationPage(index: 2));
+          case NamedRoutes.inboxPage:
+            return MaterialPageRoute(builder: (context) => const InboxPage());
           default:
             return MaterialPageRoute(builder: (context) => LoginScreen());
         }

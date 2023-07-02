@@ -2,8 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:social_media_app/app/configs/colors.dart';
+import 'package:social_media_app/app/configs/theme.dart';
+import 'package:social_media_app/app/resources/constant/named_routes.dart';
+import 'package:social_media_app/ui/pages/navigation_page.dart';
 
 class ChatPage extends StatelessWidget {
   final Map<String, dynamic>? userMap;
@@ -40,7 +44,33 @@ class ChatPage extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text(userMap?['email']),
+        backgroundColor: AppColors.whiteColor,
+        elevation: 0,
+        centerTitle: true,
+        leading: IconButton(
+          onPressed: () => MaterialPageRoute(
+              builder: (context) => const NavigationPage(index: 2)),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            size: 24,
+            color: AppColors.blackColor,
+          ),
+        ),
+        title: Text(
+          userMap?['email'].split('@')[0],
+          style: AppTheme.blackTextStyle.copyWith(
+            fontSize: 18,
+            fontWeight: AppTheme.bold,
+          ),
+        ),
+        actions: const [
+          Icon(
+            Icons.more_horiz_rounded,
+            size: 24,
+            color: AppColors.blackColor,
+          ),
+          SizedBox(width: 24),
+        ],
       ),
       backgroundColor: AppColors.whiteColor,
       body: SingleChildScrollView(

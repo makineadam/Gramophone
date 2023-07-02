@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -11,7 +12,9 @@ import 'home_page.dart';
 import 'chat_page.dart';
 
 class NavigationPage extends StatefulWidget {
-  const NavigationPage({super.key});
+  final int? index;
+
+  const NavigationPage({super.key, this.index});
 
   @override
   State<NavigationPage> createState() => _MyWidgetState();
@@ -29,6 +32,8 @@ class _MyWidgetState extends State<NavigationPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.index != null) _selectedIndex = widget.index!;
+
     return Scaffold(
       body: pages[_selectedIndex],
       bottomNavigationBar: _buildBottomNavBar(),
