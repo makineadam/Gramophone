@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:social_media_app/app/configs/colors.dart';
-import 'package:social_media_app/ui/pages/inbox_page.dart';
+import 'package:social_media_app/ui/pages/chat_page.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -172,7 +172,7 @@ class _SearchPageState extends State<SearchPage> {
                                     _auth.currentUser!.uid, userMap?['email']);
 
                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (_) => InboxPage(
+                                    builder: (_) => ChatPage(
                                           chatRoomId: roomId,
                                           userMap: userMap,
                                         )));

@@ -1,119 +1,112 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:social_media_app/app/configs/colors.dart';
-
+import 'package:social_media_app/data/message_model.dart';
 
 class InboxPage extends StatelessWidget {
-
-  final Map<String, dynamic>? userMap;
-  final String? chatRoomId;
-
-  InboxPage({this.chatRoomId, this.userMap});
-
-  final TextEditingController _message = TextEditingController();
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  void onSendMessage() async {
-    if(_message.text.isNotEmpty) {
-      Map<String, dynamic> messages = {
-        "sendby" : _auth.currentUser?.displayName,
-        "message": _message.text,
-        "time": FieldValue.serverTimestamp(),
-      };
-
-      _message.clear();
-
-      await _firestore.collection('chatroom').doc(chatRoomId).collection('chats').add ({
-      });
-    }else {
-      print("Enter Some Text");
-    }
-  }
+  const InboxPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-
-    final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(userMap?['email']),
-      ),
-      backgroundColor: AppColors.primaryColor2,
-      body: SingleChildScrollView(
-        child: Column (
-          children: [
-            Container(
-            height: size.height/1.25,
-            width: size.width,
-            child: StreamBuilder<QuerySnapshot>(
-              stream: _firestore.collection('chatroom').doc(chatRoomId).collection('chats').orderBy('time', descending: false).snapshots(),
-              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if(snapshot.data != null) {
-                  return ListView.builder(
-                    itemCount: snapshot.data?.docs.length,
-                      itemBuilder: (context, index) {
-                      Map<String, dynamic> map = snapshot.data?.docs[index].data() as Map<String, dynamic>;
-                      return messages(size, map);
-                      });
-                }
-                else{
-                  return Container();
-                }
-              },
-            )  ,
+      backgroundColor: AppColors.whiteColor,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(
+            height: 70,
           ),
-            Container(
-              height: size.height /10,
-              width: size.width,
-              alignment: Alignment.center,
-              child: Container(
-                height: size.height/12,
-                width: size.width/1.1,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: size.height /17,
-                      width: size.width / 1.3,
-                      child: TextField(
-                        controller: _message,
-                        decoration: InputDecoration(
-                          hintText: "Send Mesage",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8)
-                          )
-                        ),
-                      ),
+          const Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: Text(
+              'Inbox',
+              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Expanded(
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.8,
+              child: ListView.builder(
+                itemCount: messages.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final Message message = messages[index];
+                  return Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
                     ),
-                    IconButton(icon: Icon(Icons.send), onPressed: onSendMessage,)
-                  ],
-                ),
+                    child: Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.greyColor.withOpacity(0.5),
+                                spreadRadius: 2,
+                                blurRadius: 5,
+                              ),
+                            ],
+                          ),
+                          child: CircleAvatar(
+                              radius: 35,
+                              backgroundImage: AssetImage(message.image)),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.65,
+                          padding: const EdgeInsets.only(left: 20),
+                          child: Column(
+                            //crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    message.sender,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(message.time,
+                                      style: const TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w300,
+                                        color: Colors.black54,
+                                      ))
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              Container(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  message.text,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w300,
+                                    color: Colors.black54,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                },
               ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-  Widget messages(Size size, Map<String, dynamic> map) {
-    return Container(
-      width: size.width,
-      alignment: map['sendby'] == _auth.currentUser!.displayName ? Alignment.centerRight :Alignment.centerLeft,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 14),
-        margin: const EdgeInsets.symmetric(vertical: 5,horizontal: 8),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15), color: Colors.blue
-        ),
-        child: Text(map['message'], style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-          color: Colors.white,
-        ),),
+            ),
+          ),
+        ],
       ),
     );
   }

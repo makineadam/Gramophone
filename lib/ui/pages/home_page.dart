@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_app/app/configs/colors.dart';
 import 'package:social_media_app/app/configs/theme.dart';
 import 'package:social_media_app/ui/bloc/post_cubit.dart';
-import 'package:social_media_app/ui/pages/inbox_page.dart';
+import 'package:social_media_app/ui/pages/chat_page.dart';
 import 'package:social_media_app/ui/widgets/card_post.dart';
 import 'package:social_media_app/ui/widgets/clip_status_bar.dart';
 
