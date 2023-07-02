@@ -6,7 +6,6 @@ import 'package:social_media_app/app/configs/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 const users = const {
   'dribbble@gmail.com': '12345',
   'hunter@gmail.com': 'hunter',
@@ -27,9 +26,6 @@ class LoginScreen extends StatelessWidget {
         email: data.name,
         password: data.password,
       );
-      await _firestore.collection('users').doc(_firebaseAuth.currentUser!.uid).set({
-        "email": data.name!
-      });
     } on FirebaseAuthException catch (e) {
       // WRONG EMAIL
       if (e.code == 'user-not-found') {
@@ -51,11 +47,10 @@ class LoginScreen extends StatelessWidget {
     await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: data.name!, password: data.password!);
 
-    await _firestore.collection('users').doc(_firebaseAuth.currentUser!.uid).set({
-      "email": data.name!
-    });
-
-
+    await _firestore
+        .collection('users')
+        .doc(_firebaseAuth.currentUser!.uid)
+        .set({"email": data.name!});
 
     return null;
   }
