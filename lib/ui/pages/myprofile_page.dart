@@ -23,6 +23,7 @@ class MyProfilePage extends StatelessWidget {
       ),
     );
     return Scaffold(
+      extendBody: true,
       appBar: AppBar(
         backgroundColor: AppColors.whiteColor,
         elevation: 0,
@@ -51,115 +52,59 @@ class MyProfilePage extends StatelessWidget {
           SizedBox(width: 24),
         ],
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(right: 24, left: 24, top: 30),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildImageProfile(),
-                const SizedBox(height: 16),
-                Text(
-                  FirebaseAuth.instance.currentUser!.email!,
-                  style: AppTheme.blackTextStyle.copyWith(
-                    fontWeight: AppTheme.bold,
-                    fontSize: 22,
+      body: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 24, left: 24, top: 30),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildImageProfile(),
+                  const SizedBox(height: 16),
+                  Text(
+                    FirebaseAuth.instance.currentUser!.email!,
+                    style: AppTheme.blackTextStyle.copyWith(
+                      fontWeight: AppTheme.bold,
+                      fontSize: 22,
+                    ),
                   ),
-                ),
-                //const SizedBox(height: 24),
-                //_buildDescription(),
-                const SizedBox(height: 24),
-                _buildButtonAction(),
-                const SizedBox(height: 35),
-                _buildTabBar(),
-                const SizedBox(height: 24),
-                BlocProvider(
-                  create: (context) => PostCubit()..getPosts(),
-                  child: BlocBuilder<PostCubit, PostState>(
-                    builder: (context, state) {
-                      if (state is PostError) {
-                        return Center(child: Text(state.message));
-                      } else if (state is PostLoaded) {
-                        return Column(
-                          children: state.posts
-                              .map((post) => GestureDetector(
-                                    child: CardPost(post: post),
-                                  ))
-                              .toList(),
-                        );
-                      } else {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                    },
+                  //const SizedBox(height: 24),
+                  //_buildDescription(),
+                  const SizedBox(height: 24),
+                  _buildButtonAction(),
+                  const SizedBox(height: 35),
+                  _buildTabBar(),
+                  const SizedBox(height: 24),
+                  BlocProvider(
+                    create: (context) => PostCubit()..getPosts(),
+                    child: BlocBuilder<PostCubit, PostState>(
+                      builder: (context, state) {
+                        if (state is PostError) {
+                          return Center(child: Text(state.message));
+                        } else if (state is PostLoaded) {
+                          return Column(
+                            children: state.posts
+                                .map((post) => GestureDetector(
+                                      child: CardPost(post: post),
+                                    ))
+                                .toList(),
+                          );
+                        } else {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  BlocProvider<GalleryProfileCubit> _buildGridList(BuildContext context) {
-    return BlocProvider(
-      create: (context) => GalleryProfileCubit()..getGalleryProfile(),
-      child: BlocBuilder<GalleryProfileCubit, GalleryProfileState>(
-        builder: (_, state) {
-          if (state is GalleryProfileError) {
-            return Center(child: Text(state.message));
-          } else if (state is GalleryProfileLoaded) {
-            return SizedBox(
-              height: 400,
-              width: double.infinity,
-              child: GridView.count(
-                crossAxisCount: 3,
-                crossAxisSpacing: 6,
-                mainAxisSpacing: 6,
-                childAspectRatio: 0.62,
-                physics: const BouncingScrollPhysics(),
-                children: state.galleryProfiles
-                    .map((gallery) => Stack(
-                          alignment: Alignment.bottomCenter,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(24),
-                                image: DecorationImage(
-                                  image: NetworkImage(
-                                    gallery.image,
-                                  ),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 6,
-                                horizontal: 10,
-                              ),
-                              margin: const EdgeInsets.only(bottom: 12),
-                              decoration: BoxDecoration(
-                                color: AppColors.whiteColor,
-                                borderRadius: BorderRadius.circular(24),
-                              ),
-                              child: Text(
-                                gallery.like,
-                                style: AppTheme.blackTextStyle.copyWith(
-                                    fontWeight: AppTheme.bold, fontSize: 10),
-                              ),
-                            ),
-                          ],
-                        ))
-                    .toList(),
-              ),
-            );
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
+          _buildBackgroundGradient()
+        ],
       ),
     );
   }
@@ -237,4 +182,15 @@ class MyProfilePage extends StatelessWidget {
       ),
     );
   }
+
+  _buildBackgroundGradient() => Container(
+        width: double.infinity,
+        height: 150,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(colors: [
+            AppColors.whiteColor.withOpacity(0),
+            AppColors.whiteColor.withOpacity(0.8),
+          ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+        ),
+      );
 }
