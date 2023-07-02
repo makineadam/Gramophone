@@ -46,7 +46,6 @@ class _SearchPageState extends State<SearchPage> {
         userMap = value.docs[0].data();
         isLoading = false;
       });
-      print(userMap);
     });
   }
 
@@ -169,7 +168,7 @@ class _SearchPageState extends State<SearchPage> {
                                   0.2),
                               onTap: () {
                                 String roomId = chatRoomId(
-                                    _auth.currentUser!.uid, userMap?['email']);
+                                    _auth.currentUser!.email!, userMap?['email']);
 
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (_) => ChatPage(
