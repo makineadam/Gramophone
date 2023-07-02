@@ -27,7 +27,7 @@ class _MyWidgetState extends State<NavigationPage> {
     HomePage(),
     const SearchPage(),
     InboxPage(),
-    const MyProfilePage(),
+    MyProfilePage(),
   ];
 
   @override
