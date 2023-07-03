@@ -8,6 +8,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:social_media_app/app/configs/colors.dart';
 import 'package:social_media_app/data/message_model.dart';
+import 'package:social_media_app/ui/pages/chat_page.dart';
 
 class InboxPage extends StatefulWidget {
   const InboxPage({super.key});
@@ -20,6 +21,12 @@ class _InboxPageState extends State<InboxPage> {
   Map<String, dynamic>? userMap;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
+  String latestMessage = '';
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   String chatRoomId(String user1, String user2) {
     if (user1[0].toLowerCase().codeUnits[0] >
@@ -30,23 +37,11 @@ class _InboxPageState extends State<InboxPage> {
     }
   }
 
-  void findUser(String mail) async {
-    await fireStore
-        .collection('users')
-        .where("email", isEqualTo: '$mail@gmail.com')
-        .get()
-        .then((value) {
-      setState(() {
-        userMap = value.docs[0].data();
-      });
-    });
-  }
-
-  String findLastMessage() {
+  void findLastMessage(String roomId) async {
     String lastMessage = '';
-    FirebaseFirestore.instance
-        .collection('chatRoom')
-        .doc('berk@gmail.com-ali@gmail.com')
+    await fireStore
+        .collection('chatroom')
+        .doc(roomId)
         .collection('chats')
         .orderBy('time', descending: true)
         .limit(1)
@@ -54,7 +49,9 @@ class _InboxPageState extends State<InboxPage> {
         .then((value) {
       lastMessage = value.docs[0].data()['message'];
     });
-    return lastMessage;
+    setState(() {
+      latestMessage = lastMessage;
+    });
   }
 
   @override
@@ -90,10 +87,7 @@ class _InboxPageState extends State<InboxPage> {
                         itemBuilder: (context, index) {
                           Map<String, dynamic> map = snapshot.data!.docs[index]
                               .data() as Map<String, dynamic>;
-                          findUser(_auth.currentUser!.email! ==
-                                  map['id'].split('-')[0]
-                              ? map['id'].split('-')[1]
-                              : map['id'].split('-')[0]);
+                          findLastMessage(map['id']);
                           return InboxChat(
                               message: Message(
                                   image: 'assets/images/berk.png',
@@ -101,8 +95,13 @@ class _InboxPageState extends State<InboxPage> {
                                           map['id'].split('-')[0]
                                       ? map['id'].split('-')[1].split('@')[0]
                                       : map['id'].split('-')[0].split('@')[0],
-                                  text: findLastMessage(),
-                                  time: '12:00'));
+                                  text: latestMessage,
+                                  time: '12:00'),
+                              roomID: map['id'],
+                              mail: _auth.currentUser!.email! ==
+                                      map['id'].split('-')[0]
+                                  ? map['id'].split('-')[1].split('@')[0]
+                                  : map['id'].split('-')[0].split('@')[0]);
                         });
                   } else {
                     return Container();
@@ -124,17 +123,42 @@ class _InboxPageState extends State<InboxPage> {
 }
 
 class InboxChat extends StatelessWidget {
-  const InboxChat({
+  String roomID;
+  String mail;
+
+  InboxChat({
     Key? key,
     required this.message,
+    required this.roomID,
+    required this.mail,
   }) : super(key: key);
 
   final Message message;
 
+  Map<String, dynamic>? chatRoom(String id) {
+    return {
+      "id": id,
+    };
+  }
+
+  Map<String, dynamic>? userMap(String mail) {
+    return {
+      "email": mail,
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => ChatPage(
+                  chatRoom: chatRoom(roomID),
+                  userMap: userMap(mail),
+                )));
+      },
       child: Container(
+        color: Colors.transparent,
         padding: const EdgeInsets.symmetric(
           horizontal: 20,
           vertical: 10,
