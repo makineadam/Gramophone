@@ -67,14 +67,6 @@ class ChatPage extends StatelessWidget {
             fontWeight: AppTheme.bold,
           ),
         ),
-        actions: const [
-          Icon(
-            Icons.more_horiz_rounded,
-            size: 24,
-            color: AppColors.blackColor,
-          ),
-          SizedBox(width: 24),
-        ],
       ),
       backgroundColor: AppColors.whiteColor,
       body: SingleChildScrollView(
@@ -122,7 +114,7 @@ class ChatPage extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: Color.fromARGB(255, 219, 219, 219),
                         border: Border.all(color: AppColors.whiteColor),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       height: size.height / 17,
                       width: size.width / 1.3,
@@ -139,6 +131,7 @@ class ChatPage extends StatelessWidget {
                     ),
                     IconButton(
                       icon: const Icon(Icons.send),
+                      color: AppColors.primaryColor2,
                       onPressed: onSendMessage,
                     )
                   ],
@@ -163,6 +156,10 @@ class ChatPage extends StatelessWidget {
             color: AppColors.primaryColor2,
             isSender: map['sendby'] == _auth.currentUser!.uid ? true : false,
             text: map['message'],
+            textStyle: const TextStyle(
+              color: AppColors.whiteColor,
+              fontSize: 16
+            ),
           ),
         ),
       ],
