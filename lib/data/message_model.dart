@@ -13,7 +13,7 @@ class Message {
       required this.image});
 }
 
-List<Message> messages = [
+/*List<Message> messages = [
   Message(
     sender: 'berk',
     time: '5:30 PM',
@@ -26,4 +26,4 @@ List<Message> messages = [
     text: 'We could surely handle this much easily if you were here.',
     image: 'assets/images/ali.jpeg',
   ),
-];
+];*/
