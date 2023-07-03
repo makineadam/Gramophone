@@ -12,9 +12,9 @@ import 'package:chat_bubbles/chat_bubbles.dart';
 
 class ChatPage extends StatelessWidget {
   final Map<String, dynamic>? userMap;
-  final String? chatRoomId;
+  final Map<String, dynamic>? chatRoom;
 
-  ChatPage({this.chatRoomId, this.userMap});
+  ChatPage({this.chatRoom, this.userMap});
 
   final TextEditingController _message = TextEditingController();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -30,11 +30,14 @@ class ChatPage extends StatelessWidget {
 
       _message.clear();
 
-      await _firestore
-          .collection('chatroom')
-          .doc(chatRoomId)
-          .collection('chats')
-          .add(messages);
+      DocumentReference chatRoomRef =
+          _firestore.collection('chatroom').doc(chatRoom!['id']);
+      await chatRoomRef.set(chatRoom!);
+      await chatRoomRef.collection('chats').add(messages);
+
+      //await _firestore.collection('chatroom').add(chatRoom!);
+      //await _firestore.collection('chatroom').doc(chatRoom!['id']).collection('chats').add(messages);
+      //await _firestore.collection('chatroom').doc().set(chatRoom!);
     } else {
       print("Enter Some Text");
     }
@@ -79,7 +82,7 @@ class ChatPage extends StatelessWidget {
               child: StreamBuilder<QuerySnapshot>(
                 stream: _firestore
                     .collection('chatroom')
-                    .doc(chatRoomId)
+                    .doc(chatRoom!['id'])
                     .collection('chats')
                     .orderBy('time', descending: false)
                     .snapshots(),

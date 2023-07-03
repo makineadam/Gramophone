@@ -31,6 +31,12 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
+  Map<String, dynamic>? chatRoom(String id) {
+    return {
+      "id": id,
+    };
+  }
+
   void onSearch() async {
     FirebaseFirestore fireStore = FirebaseFirestore.instance;
     setState(() {
@@ -168,11 +174,12 @@ class _SearchPageState extends State<SearchPage> {
                                   0.2),
                               onTap: () {
                                 String roomId = chatRoomId(
-                                    _auth.currentUser!.email!, userMap?['email']);
+                                    _auth.currentUser!.email!,
+                                    userMap?['email']);
 
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (_) => ChatPage(
-                                          chatRoomId: roomId,
+                                          chatRoom: chatRoom(roomId),
                                           userMap: userMap,
                                         )));
                               },
