@@ -152,13 +152,14 @@ class ChatPage extends StatelessWidget {
           color: AppColors.primaryColor2.withOpacity(0.2),
         ),*/
         Container(
-          child: BubbleNormal(
-            color: AppColors.primaryColor2,
-            isSender: map['sendby'] == _auth.currentUser!.uid ? true : false,
-            text: map['message'],
-            textStyle: const TextStyle(
-              color: AppColors.whiteColor,
-              fontSize: 16
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 7),
+            child: BubbleNormal(
+              color: AppColors.primaryColor2,
+              isSender: map['sendby'] == _auth.currentUser!.uid ? true : false,
+              text: map['message'],
+              textStyle:
+                  const TextStyle(color: AppColors.whiteColor, fontSize: 16),
             ),
           ),
         ),
