@@ -24,22 +24,37 @@ class _InboxPageState extends State<InboxPage> {
   String chatRoomId(String user1, String user2) {
     if (user1[0].toLowerCase().codeUnits[0] >
         user2.toLowerCase().codeUnits[0]) {
-      return "$user1$user2";
+      return "$user1-$user2";
     } else {
-      return "$user2$user1";
+      return "$user2-$user1";
     }
   }
 
-  void onSearch() async {
+  void findUser(String mail) async {
     await fireStore
         .collection('users')
-        .where("email", isEqualTo: '${_auth.currentUser!.email}')
+        .where("email", isEqualTo: '$mail@gmail.com')
         .get()
         .then((value) {
       setState(() {
         userMap = value.docs[0].data();
       });
     });
+  }
+
+  String findLastMessage() {
+    String lastMessage = '';
+    FirebaseFirestore.instance
+        .collection('chatRoom')
+        .doc('berk@gmail.com-ali@gmail.com')
+        .collection('chats')
+        .orderBy('time', descending: true)
+        .limit(1)
+        .get()
+        .then((value) {
+      lastMessage = value.docs[0].data()['message'];
+    });
+    return lastMessage;
   }
 
   @override
@@ -68,10 +83,6 @@ class _InboxPageState extends State<InboxPage> {
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.data != null) {
-                    debugPrint(
-                        'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
-                            snapshot.data!.docs.length.toString());
-                    //QueryDocumentSnapshot? allData = snapshot.data!.docs[0];
                     final allData = snapshot.data!.docs.toList();
                     return ListView.builder(
                         reverse: false,
@@ -79,12 +90,18 @@ class _InboxPageState extends State<InboxPage> {
                         itemBuilder: (context, index) {
                           Map<String, dynamic> map = snapshot.data!.docs[index]
                               .data() as Map<String, dynamic>;
-                          //Map<String, dynamic> map = allData as Map<String, dynamic>;
+                          findUser(_auth.currentUser!.email! ==
+                                  map['id'].split('-')[0]
+                              ? map['id'].split('-')[1]
+                              : map['id'].split('-')[0]);
                           return InboxChat(
                               message: Message(
                                   image: 'assets/images/berk.png',
-                                  sender: map['id'],
-                                  text: 'Hello',
+                                  sender: _auth.currentUser!.email! ==
+                                          map['id'].split('-')[0]
+                                      ? map['id'].split('-')[1].split('@')[0]
+                                      : map['id'].split('-')[0].split('@')[0],
+                                  text: findLastMessage(),
                                   time: '12:00'));
                         });
                   } else {
