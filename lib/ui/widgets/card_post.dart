@@ -11,6 +11,7 @@ import 'package:social_media_app/app/configs/theme.dart';
 import 'package:social_media_app/app/resources/constant/named_routes.dart';
 import 'package:social_media_app/data/post_model.dart';
 import 'package:social_media_app/ui/widgets/custom_bottom_sheet_comments.dart';
+import 'package:uuid/uuid.dart';
 
 class CardPost extends StatefulWidget {
   final PostModel post;
@@ -35,7 +36,9 @@ class _CardPostState extends State<CardPost> {
     List<int> bytes = base64Decode(base64Data);
 
     final appDir = await getApplicationDocumentsDirectory();
-    String tempPath = '${appDir.path}/audio.wav';
+    Uuid uuid = Uuid();
+    String uniqueId = uuid.v1();
+    String tempPath = '${appDir.path}/$uniqueId.wav';
     await File(tempPath).writeAsBytes(bytes);
     setState(() {
       widget.outputpath = tempPath;

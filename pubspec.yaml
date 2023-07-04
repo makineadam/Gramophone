@@ -45,6 +45,7 @@ dependencies:
   firebase_database: ^10.2.3
   cloud_firestore: ^4.8.2
   chat_bubbles: ^1.4.1
+  uuid: ^3.0.7
   
 
   # The following adds the Cupertino Icons font to your application.
