@@ -1,43 +1,47 @@
 class PostModel {
+  final String sender;
+  String imgProfile = 'assets/images/berk.png';
+  String? picture;
   final String name;
-  final String imgProfile;
-  final String picture;
-  final String caption;
-  final List<String> hashtags;
-  final String like;
-  final String comment;
-  final String share;
+  List<String>? hashtags;
+  String like = '0';
+  String comment = '0';
+  String share = '0';
+  String audio = '';
 
-  const PostModel({
-    required this.name,
+  PostModel({
+    required this.sender,
     required this.imgProfile,
     required this.picture,
-    required this.caption,
+    required this.name,
     required this.hashtags,
     required this.like,
     required this.comment,
     required this.share,
+    required this.audio,
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) => PostModel(
+        sender: json['sender'].split('@')[0],
+        imgProfile: 'assets/images/berk.png',
+        picture: null,
         name: json['name'],
-        imgProfile: json['imgProfile'],
-        picture: json['picture'],
-        caption: json['caption'],
-        hashtags: List<String>.from(json["hashtag"].map((x) => x)),
-        like: json['like'],
-        comment: json['comment'],
-        share: json['share'],
+        hashtags: null, //List<String>.from(json["hashtag"].map((x) => x)),
+        like: '0',
+        comment: '0',
+        share: '0',
+        audio: json['audio'],
       );
 
   Map<String, dynamic> toJson() => {
-        'name': name,
+        'sender': sender,
         'imgProfile': imgProfile,
         'picture': picture,
-        'caption': caption,
+        'name': name,
         'hashtag': hashtags,
         'like': like,
         'comment': comment,
         'share': share,
+        'audio': audio,
       };
 }

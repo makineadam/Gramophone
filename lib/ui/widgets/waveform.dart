@@ -9,15 +9,18 @@ import 'dart:io';
 import 'package:social_media_app/app/configs/colors.dart';
 
 class WaveformScreen extends StatefulWidget {
+  final String assetPath;
+
+  const WaveformScreen({Key? key, required this.assetPath}) : super(key: key);
+
   @override
   _WaveformScreenState createState() => _WaveformScreenState();
 }
 
 class _WaveformScreenState extends State<WaveformScreen> {
-  PlayerController controller = PlayerController();
+  final PlayerController controller = PlayerController();
   List<double> waveformData = [];
   PlayerState playerState = PlayerState.stopped;
-  final assetPath = 'assets/sounds/enver.mp3';
 
   @override
   void initState() {
@@ -31,20 +34,20 @@ class _WaveformScreenState extends State<WaveformScreen> {
   }
 
   Future<void> extractWaveformData() async {
-    final bytes = await rootBundle.load(assetPath);
+    //final bytes = await rootBundle.load(widget.assetPath);
     final tempDir = await getTemporaryDirectory();
-    final tempPath = '${tempDir.path}/enver.mp3';
-    final tempFile = await writeToFile(bytes, tempPath);
+    final tempPath = '${tempDir.path}/temp.mp3';
+    //final tempFile = await writeToFile(bytes, tempPath);
 
     await controller.preparePlayer(
-      path: tempFile.path,
+      path: widget.assetPath,
       shouldExtractWaveform: true,
       noOfSamples: 100,
       volume: 1.0,
     );
 
     final extractedData = await controller.extractWaveformData(
-      path: tempFile.path,
+      path: widget.assetPath,
       noOfSamples: 100,
     );
 

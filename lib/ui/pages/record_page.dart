@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:audio_waveforms/audio_waveforms.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -19,8 +20,8 @@ class RecordPage extends StatefulWidget {
 
 class _HomeState extends State<RecordPage> {
   late final RecorderController recorderController;
-
-  late DatabaseReference dbRef;
+  FirebaseFirestore fireStore = FirebaseFirestore.instance;
+  final TextEditingController _naming = TextEditingController();
 
   late String? path;
   late String? path2;
@@ -38,7 +39,7 @@ class _HomeState extends State<RecordPage> {
     super.initState();
     _getDir();
     _initialiseControllers();
-    dbRef = FirebaseDatabase.instance.ref().child('Recordings');
+    //CollectionReference recordingsRef = fireStore.collection('Recordings');
   }
 
   void _getDir() async {
@@ -78,6 +79,7 @@ class _HomeState extends State<RecordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: AppColors.whiteColor,
         elevation: 0,
@@ -107,10 +109,36 @@ class _HomeState extends State<RecordPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 100),
+                  const SizedBox(height: 40),
                   SafeArea(
                     child: Column(
                       children: [
+                        Container(
+                            decoration: BoxDecoration(
+                              color: Color.fromARGB(255, 230, 230, 230),
+                              border: Border.all(color: AppColors.whiteColor),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            height: 50,
+                            width: 270,
+                            child: Row(
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                ),
+                                Expanded(
+                                  child: TextField(
+                                    controller: _naming,
+                                    decoration: const InputDecoration(
+                                        hintText: "Name your recording...",
+                                        border: InputBorder
+                                            .none //OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                                        ),
+                                  ),
+                                ),
+                              ],
+                            )),
+                        const SizedBox(height: 45),
                         AnimatedSwitcher(
                           duration: const Duration(milliseconds: 200),
                           child: isRecording
@@ -168,7 +196,7 @@ class _HomeState extends State<RecordPage> {
                                   ),
                                 ),
                         ),
-                        const SizedBox(height: 60),
+                        const SizedBox(height: 40),
                         Container(
                           height: 225,
                           width: 225,
@@ -221,7 +249,7 @@ class _HomeState extends State<RecordPage> {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 45),
+                        const SizedBox(height: 30),
                         StreamBuilder<int>(
                           stream: _stopWatchTimer.rawTime,
                           initialData: _stopWatchTimer.rawTime.value,
@@ -253,7 +281,8 @@ class _HomeState extends State<RecordPage> {
       if (isRecording) {
         recorderController.reset();
 
-        _stopWatchTimer.onStopTimer(); //stop
+        _stopWatchTimer.onStopTimer();
+        _stopWatchTimer.onResetTimer(); //stop
         final recordedPath = await recorderController.stop();
 
         if (recordedPath != null) {
@@ -261,16 +290,26 @@ class _HomeState extends State<RecordPage> {
           path = recordedPath;
           File file = File(path!);
 
-          dbRef.child(auth.currentUser!.uid).set({
+          CollectionReference recordingsRef =
+              fireStore.collection('recordings');
+          Map<String, dynamic> data = {
             'audio': base64Encode(file.readAsBytesSync()),
-          });
+            'sender': auth.currentUser!.email,
+            'name': _naming.text,
+          };
 
-          final snapshot = await dbRef.child(auth.currentUser!.uid).get();
-          if (snapshot.exists) {
-            print(snapshot.value);
-          } else {
-            print('No data available.');
-          }
+          await recordingsRef
+              .doc(auth.currentUser!.uid)
+              .collection('audio')
+              .add(data);
+
+          await recordingsRef
+              .doc(auth.currentUser!.uid)
+              .collection('audio')
+              .get()
+              .then((value) {
+            print(value.docs[0].data()['audio']);
+          });
         }
       } else {
         _stopWatchTimer.onStartTimer(); //start timer

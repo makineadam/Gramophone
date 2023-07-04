@@ -34,10 +34,6 @@ class ChatPage extends StatelessWidget {
           _firestore.collection('chatroom').doc(chatRoom!['id']);
       await chatRoomRef.set(chatRoom!);
       await chatRoomRef.collection('chats').add(messages);
-
-      //await _firestore.collection('chatroom').add(chatRoom!);
-      //await _firestore.collection('chatroom').doc(chatRoom!['id']).collection('chats').add(messages);
-      //await _firestore.collection('chatroom').doc().set(chatRoom!);
     } else {
       print("Enter Some Text");
     }
@@ -170,20 +166,3 @@ class ChatPage extends StatelessWidget {
     );
   }
 }
-
-
-/* Container(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            color: AppColors.primaryColor2),
-        child: Text(
-          map['message'],
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: Colors.black,
-          ),
-        ),
-      ), */

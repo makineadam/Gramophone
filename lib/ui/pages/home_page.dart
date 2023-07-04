@@ -45,15 +45,40 @@ class _HomePageState extends State<HomePage> {
                           return Center(child: Text(state.message));
                         } else if (state is PostLoaded) {
                           return Column(
-                            children: state.posts
+                            children: [
+                              if (state.posts.isNotEmpty)
+                                Column(
+                                  children: state.posts
+                                      .map((post) => GestureDetector(
+                                            child: CardPost(post: post),
+                                          ))
+                                      .toList(),
+                                ),
+                              if (state.posts.isEmpty)
+                                const SizedBox(
+                                  height: 1000,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(top: 200),
+                                    child: Text("No Posts",
+                                        style: TextStyle(
+                                          fontSize: 28,
+                                        )),
+                                  ),
+                                ),
+                              const SizedBox(height: 1000)
+                            ],
+
+                            /*children: state.posts
                                 .map((post) => GestureDetector(
                                       child: CardPost(post: post),
                                     ))
-                                .toList(),
+                                .toList(),*/
                           );
                         } else {
-                          return const Center(
-                              child: CircularProgressIndicator());
+                          return Column(children: const [
+                            CircularProgressIndicator(),
+                            SizedBox(height: 1000)
+                          ]);
                         }
                       },
                     ),
