@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,6 +18,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
@@ -150,10 +153,6 @@ class _HomePageState extends State<HomePage> {
               height: 30,
             ),
           ),
-          const SizedBox(width: 12),
-          Image.asset("assets/images/ic_notification.png",
-              width: 24, height: 24),
-          const SizedBox(width: 12),
           const Spacer(),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
@@ -179,17 +178,18 @@ class _HomePageState extends State<HomePage> {
                         offset: const Offset(0, 10),
                       ),
                     ],
-                    image: const DecorationImage(
-                      fit: BoxFit.cover,
-                      image: NetworkImage(
-                        "https://images.unsplash.com/photo-1622023986973-e6f6f607c94e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDl8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-                      ),
-                    ),
+                    image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: AssetImage(
+                          _firebaseAuth.currentUser!.email == 'berk@gmail.com'
+                              ? 'assets/images/berk.png'
+                              : 'assets/images/ali.jpeg',
+                        )),
                   ),
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  "Ali Safarli",
+                  _firebaseAuth.currentUser!.email!.split('@')[0],
                   style: AppTheme.blackTextStyle
                       .copyWith(fontWeight: AppTheme.bold, fontSize: 12),
                 ),

@@ -152,7 +152,7 @@ class InboxChat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (_) => ChatPage(
