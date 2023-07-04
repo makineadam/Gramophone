@@ -86,11 +86,16 @@ class MyProfilePage extends StatelessWidget {
                           return Center(child: Text(state.message));
                         } else if (state is PostLoaded) {
                           return Column(
-                            children: state.posts
-                                .map((post) => GestureDetector(
-                                      child: CardPost(post: post),
-                                    ))
-                                .toList(),
+                            children: [
+                              Column(
+                                children: state.posts
+                                    .map((post) => GestureDetector(
+                                          child: CardPost(post: post),
+                                        ))
+                                    .toList(),
+                              ),
+                              const SizedBox(height: 200)
+                            ],
                           );
                         } else {
                           return const Center(
