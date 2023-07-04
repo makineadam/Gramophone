@@ -1,5 +1,6 @@
 class PostModel {
   final String sender;
+  final String senderId;
   String imgProfile = 'assets/images/berk.png';
   String? picture;
   final String name;
@@ -11,6 +12,7 @@ class PostModel {
 
   PostModel({
     required this.sender,
+    required this.senderId,
     required this.imgProfile,
     required this.picture,
     required this.name,
@@ -23,6 +25,7 @@ class PostModel {
 
   factory PostModel.fromJson(Map<String, dynamic> json) => PostModel(
         sender: json['sender'].split('@')[0],
+        senderId: json['senderId'],
         imgProfile: 'assets/images/berk.png',
         picture: null,
         name: json['name'],
@@ -35,6 +38,7 @@ class PostModel {
 
   Map<String, dynamic> toJson() => {
         'sender': sender,
+        'senderId': senderId,
         'imgProfile': imgProfile,
         'picture': picture,
         'name': name,

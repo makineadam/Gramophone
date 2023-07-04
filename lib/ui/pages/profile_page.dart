@@ -1,13 +1,21 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_app/app/configs/colors.dart';
 import 'package:social_media_app/app/configs/theme.dart';
 import 'package:social_media_app/ui/bloc/gallery_profile_cubit.dart';
+import 'package:social_media_app/ui/bloc/post_cubit.dart';
 import 'package:social_media_app/ui/pages/login_page.dart';
+import 'package:social_media_app/ui/widgets/card_post.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  ProfilePage({Key? key, required this.email, required this.id})
+      : super(key: key);
+
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final String email;
+  final String id;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +40,7 @@ class ProfilePage extends StatelessWidget {
           ),
         ),
         title: Text(
-          'Jenny Wilson',
+          email,
           style: AppTheme.blackTextStyle.copyWith(
             fontSize: 18,
             fontWeight: AppTheme.bold,
@@ -47,96 +55,64 @@ class ProfilePage extends StatelessWidget {
           SizedBox(width: 24),
         ],
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(right: 24, left: 24, top: 30),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildImageProfile(),
-                const SizedBox(height: 16),
-                Text(
-                  "@Toa_Heftiba",
-                  style: AppTheme.blackTextStyle.copyWith(
-                    fontWeight: AppTheme.bold,
-                    fontSize: 22,
+      body: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 24, left: 24, top: 30),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildImageProfile(),
+                  const SizedBox(height: 16),
+                  Text(
+                    FirebaseAuth.instance.currentUser!.email!,
+                    style: AppTheme.blackTextStyle.copyWith(
+                      fontWeight: AppTheme.bold,
+                      fontSize: 22,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 24),
-                _buildDescription(),
-                const SizedBox(height: 24),
-                _buildButtonAction(),
-                const SizedBox(height: 30),
-                _buildTabBar(),
-                const SizedBox(height: 24),
-                _buildGridList(context),
-              ],
+                  //const SizedBox(height: 24),
+                  //_buildDescription(),
+                  const SizedBox(height: 24),
+                  _buildButtonAction(),
+                  const SizedBox(height: 35),
+                  _buildTabBar(),
+                  const SizedBox(height: 24),
+                  BlocProvider(
+                    create: (context) => PostCubit()..getPosts(id),
+                    child: BlocBuilder<PostCubit, PostState>(
+                      builder: (context, state) {
+                        if (state is PostError) {
+                          return Center(child: Text(state.message));
+                        } else if (state is PostLoaded) {
+                          return Column(
+                            children: [
+                              Column(
+                                children: state.posts
+                                    .map((post) => GestureDetector(
+                                          child: CardPost(post: post),
+                                        ))
+                                    .toList(),
+                              ),
+                              const SizedBox(height: 200)
+                            ],
+                          );
+                        } else {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  BlocProvider<GalleryProfileCubit> _buildGridList(BuildContext context) {
-    return BlocProvider(
-      create: (context) => GalleryProfileCubit()..getGalleryProfile(),
-      child: BlocBuilder<GalleryProfileCubit, GalleryProfileState>(
-        builder: (_, state) {
-          if (state is GalleryProfileError) {
-            return Center(child: Text(state.message));
-          } else if (state is GalleryProfileLoaded) {
-            return SizedBox(
-              height: 400,
-              width: double.infinity,
-              child: GridView.count(
-                crossAxisCount: 3,
-                crossAxisSpacing: 6,
-                mainAxisSpacing: 6,
-                childAspectRatio: 0.62,
-                physics: const BouncingScrollPhysics(),
-                children: state.galleryProfiles
-                    .map((gallery) => Stack(
-                          alignment: Alignment.bottomCenter,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(24),
-                                image: DecorationImage(
-                                  image: NetworkImage(
-                                    gallery.image,
-                                  ),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 6,
-                                horizontal: 10,
-                              ),
-                              margin: const EdgeInsets.only(bottom: 12),
-                              decoration: BoxDecoration(
-                                color: AppColors.whiteColor,
-                                borderRadius: BorderRadius.circular(24),
-                              ),
-                              child: Text(
-                                gallery.like,
-                                style: AppTheme.blackTextStyle.copyWith(
-                                    fontWeight: AppTheme.bold, fontSize: 10),
-                              ),
-                            ),
-                          ],
-                        ))
-                    .toList(),
-              ),
-            );
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
+          _buildBackgroundGradient()
+        ],
       ),
     );
   }
@@ -146,32 +122,12 @@ class ProfilePage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
-          "Photos",
+          "Uploaded Audio",
           style: AppTheme.blackTextStyle.copyWith(
             fontWeight: AppTheme.bold,
             fontSize: 18,
           ),
         ),
-        const SizedBox(width: 24),
-        Text(
-          "Video",
-          style: AppTheme.blackTextStyle.copyWith(
-            fontWeight: AppTheme.bold,
-            fontSize: 18,
-            color: AppColors.greyColor,
-          ),
-        ),
-        const SizedBox(width: 24),
-        Text(
-          "Tagged",
-          style: AppTheme.blackTextStyle.copyWith(
-            fontWeight: AppTheme.bold,
-            fontSize: 18,
-            color: AppColors.greyColor,
-          ),
-        ),
-        const Spacer(),
-        Image.asset("assets/images/ic_dots_2.png", width: 32),
       ],
     );
   }
@@ -183,7 +139,7 @@ class ProfilePage extends StatelessWidget {
         ElevatedButton(
           onPressed: () {},
           style: ElevatedButton.styleFrom(
-            primary: AppColors.greenColor,
+            backgroundColor: AppColors.primaryColor2,
             minimumSize: const Size(120, 45),
             elevation: 8,
             shadowColor: AppColors.primaryColor.withOpacity(0.3),
@@ -212,74 +168,6 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Row _buildDescription() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              "29",
-              style: AppTheme.blackTextStyle.copyWith(
-                fontWeight: AppTheme.bold,
-                fontSize: 16,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              "Following",
-              style: AppTheme.blackTextStyle.copyWith(
-                fontWeight: AppTheme.regular,
-                color: AppColors.greyColor,
-              ),
-            ),
-          ],
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              "121.9k",
-              style: AppTheme.blackTextStyle.copyWith(
-                fontWeight: AppTheme.bold,
-                fontSize: 16,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              "Followers",
-              style: AppTheme.blackTextStyle.copyWith(
-                fontWeight: AppTheme.regular,
-                color: AppColors.greyColor,
-              ),
-            ),
-          ],
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              "7.5M",
-              style: AppTheme.blackTextStyle.copyWith(
-                fontWeight: AppTheme.bold,
-                fontSize: 16,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              "Likes",
-              style: AppTheme.blackTextStyle.copyWith(
-                fontWeight: AppTheme.regular,
-                color: AppColors.greyColor,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
   Container _buildImageProfile() {
     return Container(
       width: 130,
@@ -294,12 +182,25 @@ class ProfilePage extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(60),
-        child: Image.network(
-          "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8ODR8fHNvbGlkJTIwYmFja2dyb3VuZCUyMHBlb3BsZSUyMGltYWdlc3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
+        child: Image.asset(
+          _firebaseAuth.currentUser!.email! == 'berk@gmail.com'
+              ? 'assets/images/berk.png'
+              : 'assets/images/ali.jpeg',
           width: 120,
           fit: BoxFit.cover,
         ),
       ),
     );
   }
+
+  _buildBackgroundGradient() => Container(
+        width: double.infinity,
+        height: 150,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(colors: [
+            AppColors.whiteColor.withOpacity(0),
+            AppColors.whiteColor.withOpacity(0.8),
+          ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+        ),
+      );
 }

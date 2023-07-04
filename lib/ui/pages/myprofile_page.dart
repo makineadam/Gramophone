@@ -73,13 +73,12 @@ class MyProfilePage extends StatelessWidget {
                   ),
                   //const SizedBox(height: 24),
                   //_buildDescription(),
-                  const SizedBox(height: 24),
-                  _buildButtonAction(),
                   const SizedBox(height: 35),
                   _buildTabBar(),
                   const SizedBox(height: 24),
                   BlocProvider(
-                    create: (context) => PostCubit()..getPosts(),
+                    create: (context) =>
+                        PostCubit()..getPosts(_firebaseAuth.currentUser!.uid),
                     child: BlocBuilder<PostCubit, PostState>(
                       builder: (context, state) {
                         if (state is PostError) {
@@ -125,42 +124,6 @@ class MyProfilePage extends StatelessWidget {
             fontSize: 18,
           ),
         ),
-      ],
-    );
-  }
-
-  Row _buildButtonAction() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primaryColor2,
-            minimumSize: const Size(120, 45),
-            elevation: 8,
-            shadowColor: AppColors.primaryColor.withOpacity(0.3),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-          child: Text('Follow',
-              style: AppTheme.whiteTextStyle
-                  .copyWith(fontWeight: AppTheme.semiBold)),
-        ),
-        const SizedBox(width: 12),
-        Container(
-          width: 45,
-          height: 45,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: AppColors.greyColor.withOpacity(0.17),
-            image: const DecorationImage(
-              scale: 2.3,
-              image: AssetImage("assets/images/ic_inbox.png"),
-            ),
-          ),
-        )
       ],
     );
   }

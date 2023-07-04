@@ -296,6 +296,7 @@ class _HomeState extends State<RecordPage> {
             'audio': base64Encode(file.readAsBytesSync()),
             'sender': auth.currentUser!.email,
             'name': _naming.text,
+            'senderId': auth.currentUser!.uid,
           };
 
           await recordingsRef

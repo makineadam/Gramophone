@@ -41,7 +41,8 @@ class _HomePageState extends State<HomePage> {
                   _buildCustomAppBar(context),
                   const SizedBox(height: 18),
                   BlocProvider(
-                    create: (context) => PostCubit()..getPosts(),
+                    create: (context) =>
+                        PostCubit()..getPosts(_firebaseAuth.currentUser!.uid),
                     child: BlocBuilder<PostCubit, PostState>(
                       builder: (context, state) {
                         if (state is PostError) {

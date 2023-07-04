@@ -29,10 +29,6 @@ class MyApp extends StatelessWidget {
         switch (settings.name) {
           case NamedRoutes.homeScreen:
             return MaterialPageRoute(builder: (context) => HomePage());
-          case NamedRoutes.profileScreen:
-            return MaterialPageRoute(
-              builder: (context) => const ProfilePage(),
-            );
           case NamedRoutes.recordScreen:
             return MaterialPageRoute(builder: (context) => const RecordPage());
           case NamedRoutes.navigationScreen:

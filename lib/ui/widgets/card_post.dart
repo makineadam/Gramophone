@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:social_media_app/ui/pages/profile_page.dart';
 import 'waveform.dart';
 import 'clip_status_bar.dart';
 import 'package:social_media_app/app/configs/colors.dart';
@@ -83,8 +84,14 @@ class _CardPostState extends State<CardPost> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           GestureDetector(
-            onTap: () =>
-                Navigator.of(context).pushNamed(NamedRoutes.profileScreen),
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => ProfilePage(
+                  email: widget.post.sender,
+                  id: widget.post.senderId,
+                ),
+              ));
+            },
             child: Row(
               children: [
                 ClipRRect(
