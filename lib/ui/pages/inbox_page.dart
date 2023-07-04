@@ -90,7 +90,10 @@ class _InboxPageState extends State<InboxPage> {
                           findLastMessage(map['id']);
                           return InboxChat(
                               message: Message(
-                                  image: 'assets/images/berk.png',
+                                  image: _auth.currentUser!.email! ==
+                                          map['id'].split('-')[0]
+                                      ? 'assets/images/ali.jpeg'
+                                      : 'assets/images/berk.png',
                                   sender: _auth.currentUser!.email! ==
                                           map['id'].split('-')[0]
                                       ? map['id'].split('-')[1].split('@')[0]

@@ -175,7 +175,9 @@ class MyProfilePage extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(60),
         child: Image.asset(
-          'assets/images/berk.png',
+          _firebaseAuth.currentUser!.email! == 'berk@gmail.com'
+              ? 'assets/images/berk.png'
+              : 'assets/images/ali.jpeg',
           width: 120,
           fit: BoxFit.cover,
         ),
