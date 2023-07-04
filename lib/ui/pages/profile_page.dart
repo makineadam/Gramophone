@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,6 +8,7 @@ import 'package:social_media_app/app/configs/colors.dart';
 import 'package:social_media_app/app/configs/theme.dart';
 import 'package:social_media_app/ui/bloc/gallery_profile_cubit.dart';
 import 'package:social_media_app/ui/bloc/post_cubit.dart';
+import 'package:social_media_app/ui/pages/chat_page.dart';
 import 'package:social_media_app/ui/pages/login_page.dart';
 import 'package:social_media_app/ui/widgets/card_post.dart';
 
@@ -16,6 +19,15 @@ class ProfilePage extends StatelessWidget {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final String email;
   final String id;
+
+  String chatRoomId(String user1, String user2) {
+    if (user1[0].toLowerCase().codeUnits[0] >
+        user2.toLowerCase().codeUnits[0]) {
+      return "$user1-$user2";
+    } else {
+      return "$user2-$user1";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +52,7 @@ class ProfilePage extends StatelessWidget {
           ),
         ),
         title: Text(
-          email,
+          email.split('@')[0],
           style: AppTheme.blackTextStyle.copyWith(
             fontSize: 18,
             fontWeight: AppTheme.bold,
@@ -68,7 +80,7 @@ class ProfilePage extends StatelessWidget {
                   _buildImageProfile(),
                   const SizedBox(height: 16),
                   Text(
-                    FirebaseAuth.instance.currentUser!.email!,
+                    email,
                     style: AppTheme.blackTextStyle.copyWith(
                       fontWeight: AppTheme.bold,
                       fontSize: 22,
@@ -77,7 +89,7 @@ class ProfilePage extends StatelessWidget {
                   //const SizedBox(height: 24),
                   //_buildDescription(),
                   const SizedBox(height: 24),
-                  _buildButtonAction(),
+                  _buildButtonAction(context),
                   const SizedBox(height: 35),
                   _buildTabBar(),
                   const SizedBox(height: 24),
@@ -132,7 +144,19 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Row _buildButtonAction() {
+  Map<String, dynamic>? chatRoom(String id) {
+    return {
+      "id": id,
+    };
+  }
+
+  Map<String, dynamic>? userMap(String mail) {
+    return {
+      "email": mail,
+    };
+  }
+
+  Row _buildButtonAction(context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -152,15 +176,26 @@ class ProfilePage extends StatelessWidget {
                   .copyWith(fontWeight: AppTheme.semiBold)),
         ),
         const SizedBox(width: 12),
-        Container(
-          width: 45,
-          height: 45,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: AppColors.greyColor.withOpacity(0.17),
-            image: const DecorationImage(
-              scale: 2.3,
-              image: AssetImage("assets/images/ic_inbox.png"),
+        GestureDetector(
+          onTap: () {
+            String roomId =
+                chatRoomId(_firebaseAuth.currentUser!.email!, email);
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => ChatPage(
+                      chatRoom: chatRoom(roomId),
+                      userMap: userMap(email),
+                    )));
+          },
+          child: Container(
+            width: 45,
+            height: 45,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.greyColor.withOpacity(0.17),
+              image: const DecorationImage(
+                scale: 2.3,
+                image: AssetImage("assets/images/ic_inbox.png"),
+              ),
             ),
           ),
         )
@@ -183,7 +218,7 @@ class ProfilePage extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(60),
         child: Image.asset(
-          _firebaseAuth.currentUser!.email! == 'berk@gmail.com'
+          email == 'berk@gmail.com'
               ? 'assets/images/berk.png'
               : 'assets/images/ali.jpeg',
           width: 120,

@@ -50,7 +50,11 @@ class LoginScreen extends StatelessWidget {
     await _firestore
         .collection('users')
         .doc(_firebaseAuth.currentUser!.uid)
-        .set({"email": data.name!});
+        .set({
+      "email": data.name!,
+      "password": data.password!,
+      "id": _firebaseAuth.currentUser!.uid
+    });
 
     return null;
   }

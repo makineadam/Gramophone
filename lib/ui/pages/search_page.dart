@@ -8,6 +8,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:social_media_app/app/configs/colors.dart';
 import 'package:social_media_app/ui/pages/chat_page.dart';
+import 'package:social_media_app/ui/pages/profile_page.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -173,7 +174,11 @@ class _SearchPageState extends State<SearchPage> {
                                   const EdgeInsets.all(10),
                                   0.2),
                               onTap: () {
-                                String roomId = chatRoomId(
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (_) => ProfilePage(
+                                        email: '${_search.text}@gmail.com',
+                                        id: userMap!['id'])));
+                                /*String roomId = chatRoomId(
                                     _auth.currentUser!.email!,
                                     userMap?['email']);
 
@@ -181,7 +186,7 @@ class _SearchPageState extends State<SearchPage> {
                                     builder: (_) => ChatPage(
                                           chatRoom: chatRoom(roomId),
                                           userMap: userMap,
-                                        )));
+                                        )));*/
                               },
                               leading: const Icon(
                                 Icons.person,
