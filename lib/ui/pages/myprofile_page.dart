@@ -78,7 +78,7 @@ class MyProfilePage extends StatelessWidget {
                   const SizedBox(height: 24),
                   BlocProvider(
                     create: (context) =>
-                        PostCubit()..getPosts(_firebaseAuth.currentUser!.uid),
+                        PostCubit()..getMyPosts(_firebaseAuth.currentUser!.uid),
                     child: BlocBuilder<PostCubit, PostState>(
                       builder: (context, state) {
                         if (state is PostError) {

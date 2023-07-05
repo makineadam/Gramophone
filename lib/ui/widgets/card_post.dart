@@ -87,7 +87,7 @@ class _CardPostState extends State<CardPost> {
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (_) => ProfilePage(
-                  email: widget.post.sender,
+                  email: '${widget.post.sender}@gmail.com',
                   id: widget.post.senderId,
                 ),
               ));

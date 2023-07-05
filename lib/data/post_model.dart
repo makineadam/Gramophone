@@ -26,7 +26,9 @@ class PostModel {
   factory PostModel.fromJson(Map<String, dynamic> json) => PostModel(
         sender: json['sender'].split('@')[0],
         senderId: json['senderId'],
-        imgProfile: 'assets/images/berk.png',
+        imgProfile: json['sender'] == 'berk@gmail.com'
+            ? 'assets/images/berk.png'
+            : 'assets/images/ali.jpeg',
         picture: null,
         name: json['name'],
         hashtags: null, //List<String>.from(json["hashtag"].map((x) => x)),

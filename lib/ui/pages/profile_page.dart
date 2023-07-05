@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,13 +13,60 @@ import 'package:social_media_app/ui/pages/chat_page.dart';
 import 'package:social_media_app/ui/pages/login_page.dart';
 import 'package:social_media_app/ui/widgets/card_post.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   ProfilePage({Key? key, required this.email, required this.id})
       : super(key: key);
 
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final String email;
   final String id;
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final followersRef = FirebaseFirestore.instance.collection('followers');
+  final followingRef = FirebaseFirestore.instance.collection('following');
+
+  bool isFollowing = false;
+  int followerCount = 0;
+  int followingCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    checkIfFollowing();
+    getFollowers();
+    getFollowing();
+  }
+
+  checkIfFollowing() async {
+    DocumentSnapshot doc = await followersRef
+        .doc(widget.id)
+        .collection('userFollowers')
+        .doc(_firebaseAuth.currentUser!.uid)
+        .get();
+    setState(() {
+      isFollowing = doc.exists;
+    });
+  }
+
+  getFollowers() async {
+    QuerySnapshot snapshot =
+        await followersRef.doc(widget.id).collection('userFollowers').get();
+    setState(() {
+      followerCount = snapshot.docs.length;
+    });
+  }
+
+  getFollowing() async {
+    QuerySnapshot snapshot =
+        await followingRef.doc(widget.id).collection('userFollowing').get();
+    setState(() {
+      followingCount = snapshot.docs.length;
+    });
+  }
 
   String chatRoomId(String user1, String user2) {
     if (user1[0].toLowerCase().codeUnits[0] >
@@ -52,7 +100,7 @@ class ProfilePage extends StatelessWidget {
           ),
         ),
         title: Text(
-          email.split('@')[0],
+          widget.email.split('@')[0],
           style: AppTheme.blackTextStyle.copyWith(
             fontSize: 18,
             fontWeight: AppTheme.bold,
@@ -80,21 +128,21 @@ class ProfilePage extends StatelessWidget {
                   _buildImageProfile(),
                   const SizedBox(height: 16),
                   Text(
-                    email,
+                    widget.email,
                     style: AppTheme.blackTextStyle.copyWith(
                       fontWeight: AppTheme.bold,
                       fontSize: 22,
                     ),
                   ),
-                  //const SizedBox(height: 24),
-                  //_buildDescription(),
+                  const SizedBox(height: 24),
+                  _buildDescription(),
                   const SizedBox(height: 24),
                   _buildButtonAction(context),
                   const SizedBox(height: 35),
                   _buildTabBar(),
                   const SizedBox(height: 24),
                   BlocProvider(
-                    create: (context) => PostCubit()..getPosts(id),
+                    create: (context) => PostCubit()..getPosts(widget.id),
                     child: BlocBuilder<PostCubit, PostState>(
                       builder: (context, state) {
                         if (state is PostError) {
@@ -160,30 +208,16 @@ class ProfilePage extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primaryColor2,
-            minimumSize: const Size(120, 45),
-            elevation: 8,
-            shadowColor: AppColors.primaryColor.withOpacity(0.3),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-          child: Text('Follow',
-              style: AppTheme.whiteTextStyle
-                  .copyWith(fontWeight: AppTheme.semiBold)),
-        ),
+        buildProfileButton(),
         const SizedBox(width: 12),
         GestureDetector(
           onTap: () {
             String roomId =
-                chatRoomId(_firebaseAuth.currentUser!.email!, email);
+                chatRoomId(_firebaseAuth.currentUser!.email!, widget.email);
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (_) => ChatPage(
                       chatRoom: chatRoom(roomId),
-                      userMap: userMap(email),
+                      userMap: userMap(widget.email),
                     )));
           },
           child: Container(
@@ -203,6 +237,81 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
+  buildProfileButton() {
+    if (isFollowing) {
+      return buildButton('Unfollow', handleUnfollowUser);
+    } else if (!isFollowing) {
+      return buildButton('Follow', handleFollowUser);
+    }
+  }
+
+  handleUnfollowUser() {
+    setState(() {
+      isFollowing = false;
+    });
+
+    followersRef
+        .doc(widget.id)
+        .collection('userFollowers')
+        .doc(_firebaseAuth.currentUser!.uid)
+        .get()
+        .then((doc) {
+      if (doc.exists) {
+        doc.reference.delete();
+      }
+    });
+
+    followingRef
+        .doc(_firebaseAuth.currentUser!.uid)
+        .collection('userFollowing')
+        .doc(widget.id)
+        .get()
+        .then((doc) {
+      if (doc.exists) {
+        doc.reference.delete();
+      }
+    });
+  }
+
+  handleFollowUser() {
+    setState(() {
+      isFollowing = true;
+    });
+
+    followersRef
+        .doc(widget.id)
+        .collection('userFollowers')
+        .doc(_firebaseAuth.currentUser!.uid)
+        .set({});
+
+    followingRef
+        .doc(_firebaseAuth.currentUser!.uid)
+        .collection('userFollowing')
+        .doc(widget.id)
+        .set({});
+  }
+
+  ElevatedButton buildButton(String text, Function() onPressed) {
+    return ElevatedButton(
+      onPressed: () {
+        onPressed();
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor:
+            isFollowing ? AppColors.primaryColor : AppColors.primaryColor2,
+        minimumSize: const Size(120, 45),
+        elevation: 8,
+        shadowColor: AppColors.primaryColor.withOpacity(0.3),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+      child: Text(text,
+          style:
+              AppTheme.whiteTextStyle.copyWith(fontWeight: AppTheme.semiBold)),
+    );
+  }
+
   Container _buildImageProfile() {
     return Container(
       width: 130,
@@ -216,15 +325,68 @@ class ProfilePage extends StatelessWidget {
         ),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(60),
-        child: Image.asset(
-          email == 'berk@gmail.com'
-              ? 'assets/images/berk.png'
-              : 'assets/images/ali.jpeg',
-          width: 120,
-          fit: BoxFit.cover,
+          borderRadius: BorderRadius.circular(60),
+          child: Image.asset(
+            asset()!,
+            width: 120,
+            fit: BoxFit.cover,
+          )),
+    );
+  }
+
+  String? asset() {
+    if (widget.email == 'berk@gmail.com') {
+      return 'assets/images/berk.png';
+    } else {
+      return 'assets/images/ali.jpeg';
+    }
+  }
+
+  Row _buildDescription() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              followingCount.toString(),
+              style: AppTheme.blackTextStyle.copyWith(
+                fontWeight: AppTheme.bold,
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              "Following",
+              style: AppTheme.blackTextStyle.copyWith(
+                fontWeight: AppTheme.regular,
+                color: AppColors.greyColor,
+              ),
+            ),
+          ],
         ),
-      ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              followerCount.toString(),
+              style: AppTheme.blackTextStyle.copyWith(
+                fontWeight: AppTheme.bold,
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              "Followers",
+              style: AppTheme.blackTextStyle.copyWith(
+                fontWeight: AppTheme.regular,
+                color: AppColors.greyColor,
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_app/data/post_model.dart';
@@ -14,6 +15,35 @@ class PostCubit extends Cubit<PostState> {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   void getPosts(String id) async {
+    emit(PostLoading());
+    List<PostModel> posts = [];
+    try {
+      CollectionReference recordingsRef = fireStore.collection('recordings');
+      final followingRef = fireStore.collection('following');
+
+      QuerySnapshot snapshot =
+          await followingRef.doc(id).collection('userFollowing').get();
+      String senderId = snapshot.docs[0].id;
+
+      await recordingsRef
+          .doc(senderId)
+          .collection('audio')
+          .where('senderId', isEqualTo: senderId)
+          .get()
+          .then((value) {
+        List<PostModel> postsTemp =
+            value.docs.map((e) => PostModel.fromJson(e.data())).toList();
+        posts = postsTemp;
+      });
+      emit(PostLoaded(posts: posts));
+    } catch (e) {
+      emit(PostLoaded(
+          posts:
+              posts) /*ostError(message: 'An error occurred while loading data')*/);
+    }
+  }
+
+  void getMyPosts(String id) async {
     emit(PostLoading());
     List<PostModel> posts = [];
     try {
