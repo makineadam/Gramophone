@@ -142,7 +142,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   _buildTabBar(),
                   const SizedBox(height: 24),
                   BlocProvider(
-                    create: (context) => PostCubit()..getPosts(widget.id),
+                    create: (context) => PostCubit()..getMyPosts(widget.id),
                     child: BlocBuilder<PostCubit, PostState>(
                       builder: (context, state) {
                         if (state is PostError) {
