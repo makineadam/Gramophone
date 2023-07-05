@@ -23,23 +23,21 @@ class PostCubit extends Cubit<PostState> {
 
       QuerySnapshot snapshot =
           await followingRef.doc(id).collection('userFollowing').get();
-      String senderId = snapshot.docs[0].id;
-
-      await recordingsRef
-          .doc(senderId)
-          .collection('audio')
-          .where('senderId', isEqualTo: senderId)
-          .get()
-          .then((value) {
-        List<PostModel> postsTemp =
-            value.docs.map((e) => PostModel.fromJson(e.data())).toList();
-        posts = postsTemp;
-      });
+      List<String> senderIds = snapshot.docs.map((e) => e.id).toList();
+      for (var senderId in senderIds) {
+        await recordingsRef
+            .doc(senderId)
+            .collection('audio')
+            .get()
+            .then((value) {
+          List<PostModel> postsTemp =
+              value.docs.map((e) => PostModel.fromJson(e.data())).toList();
+          posts.addAll(postsTemp);
+        });
+      }
       emit(PostLoaded(posts: posts));
     } catch (e) {
-      emit(PostLoaded(
-          posts:
-              posts) /*ostError(message: 'An error occurred while loading data')*/);
+      emit(PostLoaded(posts: posts));
     }
   }
 
