@@ -1,4 +1,4 @@
-h# Audio Based Social Media App
+# Audio Based Social Media App
 
 This is an audio-based social media application that aims to create a space where users can connect and share their experiences through the power of sound.
 With its user-friendly interface and intuitive features, the app allows individuals to record and share audio snippets, voice memos, or even music with their friends and followers.
