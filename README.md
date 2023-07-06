@@ -18,7 +18,9 @@ Here is the screenshots of the app:
   <img src="screenshots/myprofile_page_berk.png" width="240" />
   <img src="screenshots/profile_page_ali.png" width="240" />
 </p>
-****
+
+_ _ _
+
 
 Here is the screenshot of the Firebase Cloud Firestore collections of the app:
 
