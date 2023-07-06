@@ -25,5 +25,5 @@ _ _ _
 Here is the screenshot of the Firebase Cloud Firestore collections of the app:
 
 <p float="left">
-  <img src="screenshots/firebase.png" width="960" />
+  <img src="screenshots/firebase.png" width="1000" />
 </p>
