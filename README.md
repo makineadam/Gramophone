@@ -1,22 +1,27 @@
 # Social Media App
 
-This is a Flutter-based Social Media App with a sleek and modern design.
+This is an audio-based social media application that aims to create a space where users can connect and share their experiences through the power of sound.
+With its user-friendly interface and intuitive features, the app allows individuals to record and share audio snippets, voice memos, or even music with their friends and followers.
+This app is built with Firebase, leveraging its powerful features to seamlessly combine audio sharing with a dynamic and engaging social media experience.
+Firebase's real-time database functionality enables instant updates, ensuring that users can engage with the latest content and receive notifications in real-time.
 
-![image](https://user-images.githubusercontent.com/67297759/190064136-5f096750-e957-4817-8372-145b537d7a88.png)
-![image](https://user-images.githubusercontent.com/67297759/190063284-25aac6bf-c869-4925-be56-83117027e207.png)
+----------------------------------------------------
+Here is the screenshots of the app:
 
-## Installation
-To get started, you need to have [Flutter](https://flutter.dev/docs/get-started/install) installed on your machine. Then, follow the instructions below:
+<p float="left">
+  <img src="screenshots/login_page.png" width="240" />
+  <img src="screenshots/home_page_ali.png" width="240" />
+  <img src="screenshots/search_page.png" width="240" /> 
+  <img src="screenshots/record_page.png" width="240" />
+  <img src="screenshots/inbox_page.png" width="240" />
+  <img src="screenshots/chat_room.png" width="240" /> 
+  <img src="screenshots/myprofile_page_berk.png" width="240" />
+  <img src="screenshots/profile_page_ali.png" width="240" />
+</p>
+---------------------------------------------------------------------------------------------------------------------------------------
 
-1. Open the terminal and navigate to the project folder.
-2. Run the command `flutter packages get` to install the required packages.
-3. Run `flutter run` to build and run the debug app on your emulator/phone
+Here is the screenshot of the Firebase Cloud Firestore collections of the app:
 
-## Credits
-
-- [Sajon](https://dribbble.com/sajon) for the original [Social Media App Design](https://dribbble.com/shots/15468493-Social-Media-App)
-- [Flutter](https://flutter.dev) for providing an amazing cross-platform framework.
-
-## License
-
-This project is licensed under the [MIT License](https://github.com/rrdhoi/SocialMediaApp/blob/master/LICENSE).
+<p float="left">
+  <img src="screenshots/firebase.png" width="600" />
+</p>
