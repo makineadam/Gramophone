@@ -6,7 +6,7 @@ This app is built with Firebase, leveraging its powerful features to seamlessly 
 Firebase's real-time database functionality enables instant updates, ensuring that users can engage with the latest content and receive notifications in real-time.
 
 ----------------------------------------------------
-#### Here is the screenshots of the app:
+### Here is the screenshots of the app:
 
 <p float="left">
   <img src="screenshots/login_page.png" width="240" />
@@ -22,7 +22,7 @@ Firebase's real-time database functionality enables instant updates, ensuring th
 _ _ _
 
 
-#### Here is the screenshot of the Firebase Cloud Firestore collections of the app:
+### Here is the screenshot of the Firebase Cloud Firestore collections of the app:
 
 <p float="left">
   <img src="screenshots/firebase.png" width="980" />
